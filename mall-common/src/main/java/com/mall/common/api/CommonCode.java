@@ -12,6 +12,7 @@ public enum CommonCode implements ErrorCode {
     NOT_FOUND(404, "请求资源不存在"),
     INTERNAL_ERROR(500, "系统内部错误");
 
+
     private final int code;
     private final String message;
 

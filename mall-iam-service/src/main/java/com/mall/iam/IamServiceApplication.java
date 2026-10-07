@@ -1,15 +1,16 @@
-package com.mall.gateway;
+package com.mall.iam;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class GatewayApplication {
-
+@MapperScan("com.mall.iam.infrastructure.**.mapper")
+public class IamServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class, args);
+        SpringApplication.run(IamServiceApplication.class, args);
     }
 
 }
