@@ -7,9 +7,9 @@ package com.mall.common.api;
  */
 public final class Result<T> {
 
-    private final int code;
-    private final String message;
-    private final T data;
+    private final int code; //状态码
+    private final String message; //提示信息
+    private final T data; //接口返回的数据
 
     private Result(int code, String message, T data) {
         this.code = code;
@@ -20,18 +20,21 @@ public final class Result<T> {
     public static <T> Result<T> success(T data) {
         return new Result<>(CommonCode.SUCCESS.getCode(), CommonCode.SUCCESS.getMessage(), data);
     }
-
     public static Result<Void> success() {
         return success(null);
     }
 
+
     public static <T> Result<T> failure(ErrorCode errorCode) {
         return new Result<>(errorCode.getCode(), errorCode.getMessage(), null);
     }
-
     public static <T> Result<T> failure(int code, String message) {
         return new Result<>(code, message, null);
     }
+
+
+
+
 
     public int getCode() {
         return code;

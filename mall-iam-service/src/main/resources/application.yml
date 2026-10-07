@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.195.128:3307/mall_iam
+    username: iam
+    password: iam123
+  application:
+    name: iam-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:192.168.195.128:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+server:
+  port: 8101
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info,shutdown
+#  endpoint:
+#    health:
+#      show-details: always
+#    shutdown:
+#      enabled: true
+#关于IDEA的红色按钮停止项目后报错：
+#Spring Boot 没问题、POM 没问题、Nacos Server 3.2.4 没问题、Nacos Client 注册/注销也没问题。
+#问题主要出在 IDEA 红色 Stop 对 Java 进程的中断方式，与 Nacos Client 3.0.3 的 shutdown hook 销毁顺序发生竞争。
