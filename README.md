@@ -1,4 +1,4 @@
-# Simple Mall Microservices
+# Mall
 
 一个用于学习和面试展示的简易多商家电商微服务项目。
 
