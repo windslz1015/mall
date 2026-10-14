@@ -4,18 +4,18 @@ package com.mall.iam.infrastructure.persistence.account.repository;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mall.iam.domain.account.model.Account;
 import com.mall.iam.domain.account.repository.AccountRepository;
-import com.mall.iam.infrastructure.persistence.account.mapper.IamAccountMapper;
-import com.mall.iam.infrastructure.persistence.account.mapper.IamAccountProfileMapper;
+import com.mall.iam.infrastructure.persistence.account.mapper.AccountMapper;
+import com.mall.iam.infrastructure.persistence.account.mapper.AccountProfileMapper;
 import com.mall.iam.infrastructure.persistence.account.po.IamAccountPO;
 import com.mall.iam.infrastructure.persistence.account.po.IamAccountProfilePO;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
-    private final IamAccountMapper accountMapper;
-    private final IamAccountProfileMapper profileMapper;
+    private final AccountMapper accountMapper;
+    private final AccountProfileMapper profileMapper;
 
-    public AccountRepositoryImpl(IamAccountMapper accountMapper, IamAccountProfileMapper profileMapper) {
+    public AccountRepositoryImpl(AccountMapper accountMapper, AccountProfileMapper profileMapper) {
         this.accountMapper = accountMapper;
         this.profileMapper = profileMapper;
     }

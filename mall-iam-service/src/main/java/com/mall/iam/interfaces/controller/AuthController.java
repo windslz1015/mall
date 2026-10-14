@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+
     private final RegisterAccountApplicationService registerService;
+
     public AuthController(RegisterAccountApplicationService registerService) {
         this.registerService = registerService;
     }
@@ -23,13 +25,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public Result<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public Result<RegisterResponse> register(
+            @Valid @RequestBody RegisterRequest request
+    ) {
 
-        RegisterAccountCommand command = new RegisterAccountCommand(request.username(), request.password(), request.phone(), request.email(), request.nickname());
+        RegisterAccountCommand command =
+                new RegisterAccountCommand(
+                        request.username(),
+                        request.password(),
+                        request.phone(),
+                        request.email(),
+                        request.nickname(),
+                        request.verificationCode());
 
         RegisterAccountResult result = registerService.register(command);
 
-        RegisterResponse response = new RegisterResponse(result.accountId(), result.accountNo(), result.username());
+        RegisterResponse response = new RegisterResponse(
+                result.accountId(),
+                result.accountNo(),
+                result.username());
 
         return Result.success(response);
     }

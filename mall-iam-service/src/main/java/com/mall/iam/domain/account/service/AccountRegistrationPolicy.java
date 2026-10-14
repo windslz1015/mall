@@ -3,7 +3,9 @@ package com.mall.iam.domain.account.service;
 import com.mall.common.exception.BusinessException;
 import com.mall.iam.domain.account.error.AccountErrorCode;
 import com.mall.iam.domain.account.repository.AccountRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AccountRegistrationPolicy {
 
     private final AccountRepository accountRepository;

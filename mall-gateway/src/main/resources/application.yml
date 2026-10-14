@@ -1,3 +1,7 @@
+gateway:
+  security:
+    trusted-nginx-ip: ${TRUSTED_NGINX_IP:192.168.195.128}
+
 server:
   port: 8080
 
@@ -10,16 +14,39 @@ spring:
         server-addr: ${NACOS_SERVER_ADDR:192.168.195.128:8848}
         username: ${NACOS_USERNAME:nacos}
         password: ${NACOS_PASSWORD:nacos}
+
     gateway:
       server:
         webflux:
           routes:
-            - id: user-service-route
-              uri: lb://user-service
+            - # 注册接口专用路由
+            - id: iam-register-route
+              order: -10
+              uri: lb://iam-service
               predicates:
-                - Path=/api/users/**
+                - Path=/api/iam/auth/register
+                - Method=POST
               filters:
-                - StripPrefix=1
+                - name: RegisterValidation
+                - name: RegisterRisk
+                - RewritePath=/api/iam/(?<segment>.*), /api/v1/$\{segment}
+            # IAM 通用路由
+            - id: iam-service-route
+              order: 0
+              uri: lb://iam-service
+              predicates:
+                - Path=/api/iam/**
+              filters:
+                - RewritePath=/api/iam/(?<segment>.*), /api/v1/$\{segment}
+
+
+  data:
+    redis:
+      host: ${REDIS_HOST:192.168.195.128}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:ii1110}
+      timeout: 3s
+
 
 management:
   endpoints:

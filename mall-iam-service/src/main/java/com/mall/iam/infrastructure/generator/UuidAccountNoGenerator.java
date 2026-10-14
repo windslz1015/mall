@@ -1,6 +1,6 @@
 package com.mall.iam.infrastructure.generator;
 
-import com.mall.iam.application.account.port.AccountNoGenerator;
+import com.mall.iam.application.account.port.identity.AccountNoGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

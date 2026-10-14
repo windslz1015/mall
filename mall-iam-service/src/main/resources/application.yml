@@ -1,8 +1,33 @@
 spring:
+  data:
+    redis:
+      host: 192.168.195.128
+      port: 6379
+      password: ii1110
+      database: 0
+      timeout: 3s
+
   datasource:
-    url: jdbc:mysql://192.168.195.128:3307/mall_iam
+    url: jdbc:mysql://192.168.195.128:3306/mall_iam
     username: iam
     password: iam123
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+
   application:
     name: iam-service
   cloud:
@@ -15,11 +40,12 @@ server:
   port: 8101
 
 
+
+
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-
-
 
 
 management:

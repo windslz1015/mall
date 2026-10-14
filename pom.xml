@@ -22,7 +22,6 @@
     <modules>
         <module>mall-common</module>
         <module>mall-gateway</module>
-        <module>mall-user-service</module>
         <module>mall-iam-service</module>
     </modules>
 

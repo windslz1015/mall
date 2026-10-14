@@ -1,8 +1,9 @@
 package com.mall.iam.application.account.service;
 
 import com.mall.iam.application.account.command.RegisterAccountCommand;
-import com.mall.iam.application.account.port.AccountNoGenerator;
-import com.mall.iam.application.account.port.PasswordHasher;
+import com.mall.iam.application.account.port.identity.AccountNoGenerator;
+import com.mall.iam.application.account.port.security.PasswordHasher;
+import com.mall.iam.application.account.port.verification.RegistrationCodeVerifier;
 import com.mall.iam.application.account.result.RegisterAccountResult;
 import com.mall.iam.domain.account.model.Account;
 import com.mall.iam.domain.account.repository.AccountRepository;
@@ -19,19 +20,22 @@ public class RegisterAccountApplicationService {
     private final PasswordPolicy passwordPolicy;
     private final PasswordHasher passwordHasher;
     private final AccountNoGenerator accountNoGenerator;
+    private final RegistrationCodeVerifier registrationCodeVerifier;
 
     public RegisterAccountApplicationService(
             AccountRepository accountRepository,
             AccountRegistrationPolicy registrationPolicy,
             PasswordPolicy passwordPolicy,
             PasswordHasher passwordHasher,
-            AccountNoGenerator accountNoGenerator) {
+            AccountNoGenerator accountNoGenerator,
+            RegistrationCodeVerifier registrationCodeVerifier) {
 
         this.accountRepository = accountRepository;
         this.registrationPolicy = registrationPolicy;
         this.passwordPolicy = passwordPolicy;
         this.passwordHasher = passwordHasher;
         this.accountNoGenerator = accountNoGenerator;
+        this.registrationCodeVerifier = registrationCodeVerifier;
     }
 
     @Transactional
@@ -42,6 +46,13 @@ public class RegisterAccountApplicationService {
         String phone = trimToNull(command.phone());
         String email = trimToNull(command.email());
         String nickname = trimToNull(command.nickname());
+        String verificationCode = trimToNull(command.verificationCode());
+
+        // 2. Redis注册验证码校验
+        registrationCodeVerifier.verify(
+                phone,
+                verificationCode
+        );
 
         /*2. 领域规则：* 用户名 / 手机号 / 邮箱不能重复*/
         registrationPolicy.check(username, phone, email);
@@ -55,7 +66,7 @@ public class RegisterAccountApplicationService {
         /*5. 生成账号编号*/
         String accountNo = accountNoGenerator.next();
 
-        /** 6. 调用领域模型创建账号*/
+        /*6. 调用领域模型创建账号*/
         Account account = Account.registerNormalUser(accountNo, username, phone, email, passwordHash, nickname);
 
         /*7. 保存聚合*/

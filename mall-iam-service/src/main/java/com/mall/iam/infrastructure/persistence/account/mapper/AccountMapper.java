@@ -5,6 +5,6 @@ import com.mall.iam.infrastructure.persistence.account.po.IamAccountPO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface IamAccountMapper
+public interface AccountMapper
         extends BaseMapper<IamAccountPO> {
 }
