@@ -47,7 +47,12 @@ public class SnowflakeAccountNoGenerator
     }
 
     @Override
-    public synchronized String next() {
+    public String next() {
+        return "AC" + nextId();
+    }
+
+
+    public synchronized long nextId() {
 
         long timestamp = System.currentTimeMillis();
 
@@ -84,7 +89,7 @@ public class SnowflakeAccountNoGenerator
                         | (workerId << WORKER_ID_SHIFT)
                         | sequence;
 
-        return "AC" + id;
+        return id;
     }
 
     private long waitNextMillis(long previousTimestamp) {

@@ -1,16 +1,19 @@
+server:
+  port: 8101
+
 spring:
   data:
     redis:
-      host: 192.168.195.128
-      port: 6379
-      password: ii1110
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
       database: 0
       timeout: 3s
 
   datasource:
-    url: jdbc:mysql://192.168.195.128:3306/mall_iam
-    username: iam
-    password: iam123
+    url: ${IAM_DB_URL}
+    username: ${IAM_DB_USERNAME}
+    password: ${IAM_DB_PASSWORD}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -19,10 +22,10 @@ spring:
       max-lifetime: 1800000
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
     publisher-confirm-type: correlated
     publisher-returns: true
     template:
@@ -33,20 +36,18 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_SERVER_ADDR:192.168.195.128:8848}
-        username: ${NACOS_USERNAME:nacos}
-        password: ${NACOS_PASSWORD:nacos}
-server:
-  port: 8101
+        server-addr: ${NACOS_SERVER_ADDR}
+        username: ${NACOS_USERNAME}
+        password: ${NACOS_PASSWORD}
 
 
-
-
+iam:
+  snowflake:
+    worker-id: ${IAM_SNOWFLAKE_WORKER_ID:1}
 
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-
 
 management:
   endpoints:
@@ -57,16 +58,6 @@ management:
     health:
       show-details: always
 
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: health,info,shutdown
-#  endpoint:
-#    health:
-#      show-details: always
-#    shutdown:
-#      enabled: true
-#关于IDEA的红色按钮停止项目后报错：
-#Spring Boot 没问题、POM 没问题、Nacos Server 3.2.4 没问题、Nacos Client 注册/注销也没问题。
-#问题主要出在 IDEA 红色 Stop 对 Java 进程的中断方式，与 Nacos Client 3.0.3 的 shutdown hook 销毁顺序发生竞争。
+# 关于IDEA的红色按钮停止项目后报错：
+# Spring Boot 没问题、POM 没问题、Nacos Server 3.2.4 没问题、Nacos Client 注册/注销也没问题。
+# 问题主要出在 IDEA 红色 Stop 对 Java 进程的中断方式，与 Nacos Client 3.0.3 的 shutdown hook 销毁顺序发生竞争。

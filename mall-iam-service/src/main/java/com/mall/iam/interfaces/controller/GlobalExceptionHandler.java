@@ -6,6 +6,7 @@
 
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
+    import org.springframework.dao.DataAccessException;
     import org.springframework.web.bind.MethodArgumentNotValidException;
     import org.springframework.web.bind.annotation.ExceptionHandler;
     import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,9 +38,20 @@
         /***业务规则异常*/
         @ExceptionHandler(BusinessException.class)
         public Result<Void> handleBusinessException(BusinessException e) {
+            log.warn("IAM业务异常: {}", e.getMessage());
             return Result.failure(e.getCode(), e.getMessage());
         }
 
+        /** 数据库访问异常 */
+        @ExceptionHandler(DataAccessException.class)
+        public Result<Void> handleDataAccessException(
+                DataAccessException e) {
+
+            log.error("IAM数据库访问异常", e);
+            return Result.failure(
+                    CommonCode.INTERNAL_ERROR
+            );
+        }
 
         /***系统异常*/
         @ExceptionHandler(Exception.class)

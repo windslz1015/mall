@@ -1,4 +1,8 @@
 package com.mall.iam.domain.outbox.repository;
 
-public class OutboxEventRepository {
+import com.mall.iam.domain.outbox.model.OutboxEvent;
+
+public interface OutboxEventRepository {
+
+    void save(OutboxEvent event);
 }

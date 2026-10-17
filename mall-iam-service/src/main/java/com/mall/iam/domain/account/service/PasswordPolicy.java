@@ -4,7 +4,7 @@ import com.mall.common.exception.BusinessException;
 import com.mall.iam.domain.account.error.AccountErrorCode;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class PasswordPolicy {
 
     public void check(String password) {
