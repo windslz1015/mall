@@ -34,7 +34,7 @@ public class AccountRegistrationEventRecorder {
         this.objectMapper = objectMapper;
     }
 
-    public void record(Account account) {
+    public Long record(Account account) {
 
         // 1. 生成全局唯一事件ID
         String eventId = UUID.randomUUID().toString();
@@ -46,7 +46,7 @@ public class AccountRegistrationEventRecorder {
                         account.getId(),
                         account.getAccountNo(),
                         account.getUsername(),
-                        1,
+                        account.getAccountType().getCode(),
                         Instant.now().toString()
                 );
 
@@ -79,5 +79,6 @@ public class AccountRegistrationEventRecorder {
 
         // 5. 保存到MySQL
         outboxEventRepository.save(outboxEvent);
+        return outboxEvent.getId();
     }
 }

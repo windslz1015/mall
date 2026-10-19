@@ -51,7 +51,9 @@ public class AccountRepositoryImpl implements AccountRepository {
         accountPO.setEmail(account.getEmail());
         accountPO.setPasswordHash(account.getPasswordHash());
         accountPO.setStatus(account.getStatus().getCode());
-        accountMapper.insert(accountPO);
+        if (accountMapper.insert(accountPO) != 1) {
+            throw new IllegalStateException("保存账号失败");
+        }
         Long accountId = accountPO.getId();
         account.assignId(accountId);
         IamAccountProfilePO profilePO = new IamAccountProfilePO();
@@ -59,6 +61,8 @@ public class AccountRepositoryImpl implements AccountRepository {
         profilePO.setNickname(account.getProfile().getNickname());
         profilePO.setAvatarUrl(account.getProfile().getAvatarUrl());
         profilePO.setRealName(account.getProfile().getRealName());
-        profileMapper.insert(profilePO);
+        if (profileMapper.insert(profilePO) != 1) {
+            throw new IllegalStateException("保存账号资料失败");
+        }
     }
 }

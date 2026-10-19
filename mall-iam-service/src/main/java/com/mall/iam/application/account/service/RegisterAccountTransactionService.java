@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegisterAccountTransactionService {
-
     private final AccountRepository accountRepository;
     private final AccountRegistrationPolicy registrationPolicy;
     private final PasswordHasher passwordHasher;
@@ -21,14 +20,12 @@ public class RegisterAccountTransactionService {
     private final AccountRoleAssignment accountRoleAssignment;
     private final AccountRegistrationEventRecorder eventRecorder;
 
-    public RegisterAccountTransactionService(
-            AccountRepository accountRepository,
-            AccountRegistrationPolicy registrationPolicy,
-            PasswordHasher passwordHasher,
-            AccountNoGenerator accountNoGenerator,
-            AccountRoleAssignment accountRoleAssignment,
-            AccountRegistrationEventRecorder eventRecorder) {
-
+    public RegisterAccountTransactionService(AccountRepository accountRepository,
+                                             AccountRegistrationPolicy registrationPolicy,
+                                             PasswordHasher passwordHasher,
+                                             AccountNoGenerator accountNoGenerator,
+                                             AccountRoleAssignment accountRoleAssignment,
+                                             AccountRegistrationEventRecorder eventRecorder) {
         this.accountRepository = accountRepository;
         this.registrationPolicy = registrationPolicy;
         this.passwordHasher = passwordHasher;
@@ -37,50 +34,17 @@ public class RegisterAccountTransactionService {
         this.eventRecorder = eventRecorder;
     }
 
+    /** 四次数据库写操作必须在同一 DataSourceTransactionManager 管理的 MySQL 事务内。 */
     @Transactional(rollbackFor = Exception.class)
-    public RegisterAccountResult createAccount(
-            RegisterAccountCommand command) {
-
-        // 1. 账号唯一性预检查
-        registrationPolicy.check(
-                command.username(),
-                command.phone(),
-                command.email()
-        );
-
-        // 2. BCrypt密码哈希
-        String passwordHash =
-                passwordHasher.hash(command.password());
-
-        // 3. 生成账号编号
-        String accountNo = accountNoGenerator.next();
-
-        // 4. 创建领域账号对象
-        Account account = Account.registerNormalUser(
-                accountNo,
-                command.username(),
-                command.phone(),
-                command.email(),
-                passwordHash,
-                command.nickname()
-        );
-
-        // 5. 写入 iam_account 和 iam_account_profile
-        accountRepository.save(account);
-
-        // 6. 写入 sys_account_role
-        accountRoleAssignment.assignDefaultRole(
-                account.getId()
-        );
-
-        // 7. 写入 outbox_event
-        eventRecorder.record(account);
-
-        // 8. 返回注册结果
-        return new RegisterAccountResult(
-                account.getId(),
-                account.getAccountNo(),
-                account.getUsername()
-        );
+    public RegistrationWriteResult createAccount(RegisterAccountCommand command) {
+        registrationPolicy.check(command.username(), command.phone(), command.email());
+        String passwordHash = passwordHasher.hash(command.password());
+        Account account = Account.registerNormalUser(accountNoGenerator.next(), command.username(),
+                command.phone(), command.email(), passwordHash, command.nickname());
+        accountRepository.save(account); // 依次写 iam_account、iam_account_profile
+        accountRoleAssignment.assignDefaultRole(account.getId()); // sys_account_role
+        Long eventId = eventRecorder.record(account); // outbox_event（PENDING）
+        return new RegistrationWriteResult(
+                new RegisterAccountResult(account.getId(), account.getAccountNo(), account.getUsername()), eventId);
     }
 }

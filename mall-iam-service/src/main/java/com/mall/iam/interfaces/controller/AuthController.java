@@ -20,7 +20,7 @@ public class AuthController {
     }
 
     @GetMapping("/ping")
-    public Result<String> register() {
+    public Result<String> ping() {
         return Result.success("pong");
     }
 

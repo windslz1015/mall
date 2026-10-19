@@ -42,6 +42,10 @@ spring:
 
 
 iam:
+  registration:
+    code-lease-seconds: 120
+  outbox:
+    scan-delay-ms: 5000
   snowflake:
     worker-id: ${IAM_SNOWFLAKE_WORKER_ID:1}
 

@@ -17,12 +17,14 @@ public final class Result<T> {
         this.data = data;
     }
 
-    public static <T> Result<T> success(T data) {
-        return new Result<>(CommonCode.SUCCESS.getCode(), CommonCode.SUCCESS.getMessage(), data);
-    }
     public static Result<Void> success() {
         return success(null);
     }
+
+    public static <T> Result<T> success(T data) {
+        return new Result<>(CommonCode.SUCCESS.getCode(), CommonCode.SUCCESS.getMessage(), data);
+    }
+
 
 
     public static <T> Result<T> failure(ErrorCode errorCode) {
