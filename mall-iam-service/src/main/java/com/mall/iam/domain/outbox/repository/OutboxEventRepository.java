@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OutboxEventRepository {
-    void save(OutboxEvent event);
+    Long save(OutboxEvent event);
     List<Long> findDueIds(int limit);
     /** 数据库原子更新，返回 true 的实例才有资格发送该消息。 */
     boolean claim(Long id, String token);

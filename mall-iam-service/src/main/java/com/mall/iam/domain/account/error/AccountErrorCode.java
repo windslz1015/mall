@@ -12,7 +12,11 @@ public enum AccountErrorCode implements ErrorCode {
     VERIFICATION_CODE_INVALID(10007, "验证码错误"),
     VERIFICATION_CODE_LOCKED(10008, "验证码错误次数过多，请稍后再试"),
     VERIFICATION_CODE_BUSY(10009, "验证码正在验证中，请勿重复提交"),
-    PASSWORD_BYTES_EXCEEDED(10010, "密码UTF-8编码后不能超过72字节");
+    PASSWORD_BYTES_EXCEEDED(10010, "密码UTF-8编码后不能超过72字节"),
+    VERIFICATION_CODE_SEND_TOO_FREQUENT(10011, "验证码发送太频繁，请稍后重试"),
+    VERIFICATION_CODE_SEND_DAILY_LIMIT(10012, "验证码发送次数已达上限，请稍后再试"),
+    PHONE_FORMAT_INVALID(10013, "手机号格式不正确");
+
 
     private final int code;
     private final String message;

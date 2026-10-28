@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Result<Void>> business(BusinessException e) {
         HttpStatus status = switch (e.getCode()) {
             case 10001, 10002, 10003, 10009 -> HttpStatus.CONFLICT;
-            case 10008 -> HttpStatus.TOO_MANY_REQUESTS;
+            case 10008, 10011, 10012 -> HttpStatus.TOO_MANY_REQUESTS;
             default -> HttpStatus.BAD_REQUEST;
         };
         return ResponseEntity.status(status).body(Result.failure(e.getCode(), e.getMessage()));
@@ -50,4 +50,8 @@ public class GlobalExceptionHandler {
         log.error("IAM 未处理异常", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Result.failure(CommonCode.INTERNAL_ERROR));
     }
+
+
+
+
 }

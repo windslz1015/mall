@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.RejectedExecutionException;
 
 @Service
 public class OutboxDispatchService implements RegistrationEventDispatcher {
@@ -32,10 +33,17 @@ public class OutboxDispatchService implements RegistrationEventDispatcher {
     public void submit(Long outboxId) {
         try {
             executor.execute(() -> dispatch(outboxId));
-        } catch (TaskRejectedException | java.util.concurrent.RejectedExecutionException e) {
-            log.warn("Outbox 线程池拥塞，转由定时任务补偿 outboxId={}", outboxId);
+        } catch (RejectedExecutionException e) {
+            log.warn(
+                    "Outbox 线程池拒绝任务，等待定时任务补偿 outboxId={}",
+                    outboxId
+            );
         } catch (RuntimeException e) {
-            log.warn("Outbox 提交异步任务异常，转由定时任务补偿 outboxId={}", outboxId, e);
+            log.error(
+                    "Outbox 提交异步任务异常，等待定时任务补偿 outboxId={}",
+                    outboxId,
+                    e
+            );
         }
     }
 
