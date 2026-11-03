@@ -1,22 +1,11 @@
-
 package com.mall.iam.application.account.port.verification;
 
-/**
- * 注册验证码校验端口
- *
- * Application 层只依赖该接口，
- * 不直接依赖 Redis。
- */
+/** Redis 验证码以短租约锁定，MySQL 提交后才永久消费。 */
 public interface RegistrationCodeVerifier {
-
-    /**
-     * 校验并消费注册验证码
-     *
-     * @param phone 手机号
-     * @param verificationCode 用户输入的验证码
-     *
-     * 校验成功：正常返回
-     * 校验失败：抛出异常
-     */
-    void verify(String phone, String verificationCode);
+    /** 检查验证码并获得一次性租约。成功返回随机租约 token。 */
+    String reserve(String phone, String code);
+    /** MySQL 已经提交：原子确认消费。此操作应尽力完成，允许重试。 */
+    void confirm(String phone, String token, String code);
+    /** MySQL 回滚：仅释放属于当前 token 的租约，不删除验证码。 */
+    void release(String phone, String token);
 }

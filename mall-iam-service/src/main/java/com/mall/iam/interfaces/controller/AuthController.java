@@ -4,8 +4,10 @@ import com.mall.common.api.Result;
 import com.mall.iam.application.account.command.RegisterAccountCommand;
 import com.mall.iam.application.account.result.RegisterAccountResult;
 import com.mall.iam.application.account.service.RegisterAccountApplicationService;
+import com.mall.iam.application.account.service.SendRegistrationCodeApplicationService;
 import com.mall.iam.interfaces.controller.dto.RegisterRequest;
 import com.mall.iam.interfaces.controller.dto.RegisterResponse;
+import com.mall.iam.interfaces.controller.dto.SendRegistrationCodeRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,14 +16,24 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final RegisterAccountApplicationService registerService;
+    private final SendRegistrationCodeApplicationService codeService;
 
-    public AuthController(RegisterAccountApplicationService registerService) {
+    public AuthController(RegisterAccountApplicationService registerService,
+                          SendRegistrationCodeApplicationService codeService) {
         this.registerService = registerService;
+        this.codeService = codeService;
     }
 
     @GetMapping("/ping")
-    public Result<String> register() {
+    public Result<String> ping() {
         return Result.success("pong");
+    }
+
+    @PostMapping("/register/code")
+    public Result<Void> sendRegistrationCode(
+            @Valid @RequestBody SendRegistrationCodeRequest request) {
+        codeService.send(request.phone());
+        return Result.success();
     }
 
     @PostMapping("/register")

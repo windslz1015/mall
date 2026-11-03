@@ -14,6 +14,8 @@ import reactor.core.publisher.Mono;
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     private static final String REGISTER_PATH = "/api/iam/auth/register";
+    private static final String REGISTER_CODE_PATH = "/api/iam/auth/register/code";
+    private static final String PING_PATH = "/api/iam/auth/ping";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange,
@@ -23,7 +25,9 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         String path = request.getURI().getRawPath();
 
         // 1注册接口加入白名单，跳过登录Token认证
-        if (REGISTER_PATH.equals(path)) {
+        if (REGISTER_PATH.equals(path)
+                || REGISTER_CODE_PATH.equals(path)
+                || PING_PATH.equals(path)) {
             return chain.filter(exchange);
         }
         // 2其他接口需要进行token认证

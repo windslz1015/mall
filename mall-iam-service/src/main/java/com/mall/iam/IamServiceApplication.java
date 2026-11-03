@@ -7,7 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-@MapperScan("com.mall.iam.infrastructure.**.mapper")
+@MapperScan("com.mall.iam.infrastructure.persistence.account.mapper")
 public class IamServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(IamServiceApplication.class, args);

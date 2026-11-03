@@ -1,0 +1,4 @@
+-- 将 Outbox 主键改为 MySQL 自增 ID
+ALTER TABLE outbox_event
+    MODIFY COLUMN id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT
+    COMMENT '事件主键ID';

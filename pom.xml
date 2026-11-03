@@ -20,9 +20,28 @@
     <description>电商微服务练习项目</description>
 
     <modules>
+        <!-- 公共基础模块 -->
         <module>mall-common</module>
+        <!-- API 网关服务 -->
         <module>mall-gateway</module>
+        <!-- 账号与权限服务 -->
         <module>mall-iam-service</module>
+        <!-- 商家服务 -->
+        <module>mall-merchant-service</module>
+        <!-- 商品服务 -->
+        <module>mall-product-service</module>
+        <!-- 购物车服务 -->
+        <module>mall-cart-service</module>
+        <!-- 订单交易服务 -->
+        <module>mall-order-service</module>
+        <!-- 库存服务 -->
+        <module>mall-inventory-service</module>
+        <!-- 支付服务 -->
+        <module>mall-payment-service</module>
+        <!-- 平台运营服务 -->
+        <module>mall-admin-service</module>
+        <!-- 业务保障服务 -->
+        <module>mall-reliability-service</module>
     </modules>
 
     <properties>

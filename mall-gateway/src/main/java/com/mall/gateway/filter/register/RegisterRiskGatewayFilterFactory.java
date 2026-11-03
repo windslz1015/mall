@@ -15,9 +15,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 @Component
-public class RegisterRiskGatewayFilterFactory
-        extends AbstractGatewayFilterFactory<
-        RegisterRiskGatewayFilterFactory.Config> {
+public class RegisterRiskGatewayFilterFactory extends AbstractGatewayFilterFactory<RegisterRiskGatewayFilterFactory.Config> {
 
     private final RegisterRiskService riskService;
     private final String trustedNginxIp;

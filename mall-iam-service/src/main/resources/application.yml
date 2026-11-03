@@ -42,12 +42,21 @@ spring:
 
 
 iam:
+  registration:
+    code-lease-seconds: 120
+    code-expire-seconds: 300
+    code-send-cooldown-seconds: 60
+    code-send-max-per-day: 10
+  outbox:
+    scan-delay-ms: 5000
   snowflake:
     worker-id: ${IAM_SNOWFLAKE_WORKER_ID:1}
+
 
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
+
 
 management:
   endpoints:

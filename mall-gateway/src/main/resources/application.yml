@@ -19,12 +19,12 @@ spring:
       server:
         webflux:
           routes:
-            - # 注册接口专用路由
+            # 注册接口专用路由
             - id: iam-register-route
               order: -10
               uri: lb://iam-service
               predicates:
-                - Path=/api/iam/auth/register
+                - Path=/api/iam/auth/register,/api/iam/auth/register/code
                 - Method=POST
               filters:
                 - name: RegisterValidation
@@ -44,7 +44,7 @@ spring:
     redis:
       host: ${REDIS_HOST:192.168.195.128}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:ii1110}
+      password: ${REDIS_PASSWORD}
       timeout: 3s
 
 
