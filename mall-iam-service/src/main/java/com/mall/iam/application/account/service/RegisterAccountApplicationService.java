@@ -43,11 +43,9 @@ public class RegisterAccountApplicationService {
                 normalizeEmail(input.email()), trimToNull(input.nickname()),
                 input.verificationCode().trim());
         passwordPolicy.check(command.password());
-        // 不要把验证码先 DEL 掉：MySQL 事务可能回滚。
         String token = codeVerifier.reserve(command.phone(), command.verificationCode());
         RegistrationWriteResult writeResult;
         try {
-            // 该调用通过另一个 Spring 代理；方法返回时 JDBC 事务已提交。
             writeResult = transactionService.createAccount(command);
         } catch (RuntimeException failure) {
             try {
@@ -56,7 +54,6 @@ public class RegisterAccountApplicationService {
                 log.warn("注册失败后释放验证码租约失败，租约过期后会自动释放", cleanupError);
             }
             if (failure instanceof DuplicateKeyException) {
-                // UNIQUE 约束兜住并发读写；只把已证实的用户名/手机/邮箱冲突翻译为业务异常。
                 if (accountRepository.existsByUsername(command.username())) {
                     throw new BusinessException(AccountErrorCode.USERNAME_ALREADY_EXISTS);
                 }
@@ -69,7 +66,6 @@ public class RegisterAccountApplicationService {
             }
             throw failure;
         }
-        // 后提交操作：任何 Redis/RabbitMQ 故障都不能改变已成功提交的注册结果。
         try {
             codeVerifier.confirm(command.phone(), token, command.verificationCode());
         } catch (RuntimeException error) {

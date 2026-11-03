@@ -13,9 +13,18 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/*
+目前异常分类：参数异常（JSON解析，DTO校验），业务异常，兜底异常。
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Result<Void>> invalidBody(
+            HttpMessageNotReadableException e) {
+        return ResponseEntity.badRequest().body(Result.failure(CommonCode.BAD_REQUEST.getCode(), "请求体格式不正确"));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Result<Void>> validation(MethodArgumentNotValidException e) {
@@ -24,10 +33,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(Result.failure(CommonCode.BAD_REQUEST.getCode(), message));
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<Result<Void>> badRequest(Exception e) {
-        return ResponseEntity.badRequest().body(Result.failure(CommonCode.BAD_REQUEST));
-    }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Result<Void>> business(BusinessException e) {
@@ -39,19 +44,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(Result.failure(e.getCode(), e.getMessage()));
     }
 
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Result<Void>> database(DataAccessException e) {
-        log.error("IAM 数据库异常", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Result.failure(CommonCode.INTERNAL_ERROR));
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result<Void>> unexpected(Exception e) {
-        log.error("IAM 未处理异常", e);
+        log.error("IAM服务发生未预期异常", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Result.failure(CommonCode.INTERNAL_ERROR));
     }
-
-
 
 
 }

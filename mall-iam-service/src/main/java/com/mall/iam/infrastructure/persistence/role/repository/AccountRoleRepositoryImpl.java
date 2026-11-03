@@ -54,8 +54,6 @@ public class AccountRoleRepositoryImpl
 
         int rows = jdbcTemplate.update(sql, params);
 
-        if (rows != 1) {
-            throw new IllegalStateException("账号角色关系保存失败");
-        }
+        if (rows != 1) {throw new IllegalStateException("账号角色关系保存失败");}
     }
 }

@@ -38,6 +38,11 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
 
         // 获取 MySQL 自动生成的主键
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        Number id = keyHolder.getKey();
+
+        if (id == null) {
+            throw new IllegalStateException("获取Outbox自增ID失败");
+        }
 
         int affected = jdbc.update(
                 sql,
@@ -48,12 +53,6 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
 
         if (affected != 1) {
             throw new IllegalStateException("Outbox事件保存失败");
-        }
-
-        Number id = keyHolder.getKey();
-
-        if (id == null) {
-            throw new IllegalStateException("获取Outbox自增ID失败");
         }
 
         return id.longValue();

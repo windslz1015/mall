@@ -52,9 +52,11 @@ iam:
   snowflake:
     worker-id: ${IAM_SNOWFLAKE_WORKER_ID:1}
 
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
+
 
 management:
   endpoints:

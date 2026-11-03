@@ -65,4 +65,5 @@ public class AccountRepositoryImpl implements AccountRepository {
             throw new IllegalStateException("保存账号资料失败");
         }
     }
+
 }

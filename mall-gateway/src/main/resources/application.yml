@@ -24,7 +24,7 @@ spring:
               order: -10
               uri: lb://iam-service
               predicates:
-                - Path=/api/iam/auth/register
+                - Path=/api/iam/auth/register,/api/iam/auth/register/code
                 - Method=POST
               filters:
                 - name: RegisterValidation

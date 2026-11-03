@@ -47,4 +47,5 @@ public class RegisterAccountTransactionService {
         return new RegistrationWriteResult(
                 new RegisterAccountResult(account.getId(), account.getAccountNo(), account.getUsername()), eventId);
     }
+
 }

@@ -11,12 +11,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Pattern;
+
 
 @Service
 public class SendRegistrationCodeApplicationService {
     private static final Logger log = LoggerFactory.getLogger(SendRegistrationCodeApplicationService.class);
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^1[3-9]\\d{9}$");
 
     private final AccountRepository accountRepository;
     private final RegistrationCodeIssueStore issueStore;
@@ -39,45 +43,31 @@ public class SendRegistrationCodeApplicationService {
 
 
     public void send(String rawPhone) {
-        if (rawPhone == null || !rawPhone.matches("^1[3-9]\\d{9}$")) {
-            throw new BusinessException(AccountErrorCode.PHONE_FORMAT_INVALID);
-        }
+
+        if (rawPhone == null ||
+                !PHONE_PATTERN.matcher(rawPhone).matches()) {
+            throw new BusinessException(AccountErrorCode.PHONE_FORMAT_INVALID);}
         if (accountRepository.existsByPhone(rawPhone)) {
-            throw new BusinessException(AccountErrorCode.PHONE_ALREADY_EXISTS);
-        }
+            throw new BusinessException(AccountErrorCode.PHONE_ALREADY_EXISTS);}
 
         String token = UUID.randomUUID().toString();
+
         issueStore.acquire(rawPhone, token);
 
-        String code = String.format(java.util.Locale.ROOT, "%06d", RANDOM.nextInt(1_000_000));
+        String code = String.format(Locale.ROOT, "%06d", RANDOM.nextInt(1_000_000));
+
         try {
-            // 6. 调用短信服务商
-            smsSender.sendRegistrationCode(
-                    rawPhone,
-                    code,
-                    validSeconds
-            );
-
-            // 7. 激活验证码
-            issueStore.activate(
-                    rawPhone,
-                    token,
-                    code
-            );
-
+            smsSender.sendRegistrationCode(rawPhone, code, validSeconds);
         } catch (RuntimeException failure) {
             try {
-                // 只释放发送锁，不解除发送限频
                 issueStore.release(rawPhone, token);
             } catch (RuntimeException cleanupFailure) {
                 log.warn("Unable to release registration SMS pending slot", cleanupFailure);
             }
             throw failure;
         }
+
+        issueStore.activate(rawPhone, token, code);
     }
-
-
-
-
 
 }
