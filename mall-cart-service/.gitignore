@@ -1,0 +1,7 @@
+/target/
+/.idea/
+/.settings/
+*.iml
+.env
+.env.local
+*.log

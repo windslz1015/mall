@@ -10,7 +10,9 @@ public record RegisterAccountCommand(
 
         String email,
 
-        String nickname
+        String nickname,
+
+        String verificationCode
 
 ) {
 }

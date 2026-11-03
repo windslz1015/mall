@@ -4,32 +4,58 @@ import com.mall.common.api.Result;
 import com.mall.iam.application.account.command.RegisterAccountCommand;
 import com.mall.iam.application.account.result.RegisterAccountResult;
 import com.mall.iam.application.account.service.RegisterAccountApplicationService;
+import com.mall.iam.application.account.service.SendRegistrationCodeApplicationService;
 import com.mall.iam.interfaces.controller.dto.RegisterRequest;
 import com.mall.iam.interfaces.controller.dto.RegisterResponse;
+import com.mall.iam.interfaces.controller.dto.SendRegistrationCodeRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+
     private final RegisterAccountApplicationService registerService;
-    public AuthController(RegisterAccountApplicationService registerService) {
+    private final SendRegistrationCodeApplicationService codeService;
+
+    public AuthController(RegisterAccountApplicationService registerService,
+                          SendRegistrationCodeApplicationService codeService) {
         this.registerService = registerService;
+        this.codeService = codeService;
     }
 
     @GetMapping("/ping")
-    public Result<String> register() {
+    public Result<String> ping() {
         return Result.success("pong");
     }
 
-    @PostMapping("/register")
-    public Result<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+    @PostMapping("/register/code")
+    public Result<Void> sendRegistrationCode(
+            @Valid @RequestBody SendRegistrationCodeRequest request) {
+        codeService.send(request.phone());
+        return Result.success();
+    }
 
-        RegisterAccountCommand command = new RegisterAccountCommand(request.username(), request.password(), request.phone(), request.email(), request.nickname());
+    @PostMapping("/register")
+    public Result<RegisterResponse> register(
+            @Valid @RequestBody RegisterRequest request
+    ) {
+
+        RegisterAccountCommand command =
+                new RegisterAccountCommand(
+                        request.username(),
+                        request.password(),
+                        request.phone(),
+                        request.email(),
+                        request.nickname(),
+                        request.verificationCode());
 
         RegisterAccountResult result = registerService.register(command);
 
-        RegisterResponse response = new RegisterResponse(result.accountId(), result.accountNo(), result.username());
+        RegisterResponse response = new RegisterResponse(
+                result.accountId(),
+                result.accountNo(),
+                result.username());
 
         return Result.success(response);
     }

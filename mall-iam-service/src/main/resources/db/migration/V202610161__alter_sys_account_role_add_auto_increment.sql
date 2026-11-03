@@ -1,0 +1,3 @@
+-- 修改 sys_account_role 表的 id 字段，增加 AUTO_INCREMENT 属性
+ALTER TABLE sys_account_role
+MODIFY COLUMN id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID';

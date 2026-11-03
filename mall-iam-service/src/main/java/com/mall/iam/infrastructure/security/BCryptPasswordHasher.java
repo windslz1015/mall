@@ -1,6 +1,6 @@
 package com.mall.iam.infrastructure.security;
 
-import com.mall.iam.application.account.port.PasswordHasher;
+import com.mall.iam.application.account.port.security.PasswordHasher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
