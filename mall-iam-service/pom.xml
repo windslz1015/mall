@@ -11,10 +11,8 @@
 
     <artifactId>mall-iam-service</artifactId>
     <packaging>jar</packaging>
-
-
     <name>mall-iam-service</name>
-    <description>认证和访问微服务</description>
+    <description>认证和访问服务</description>
 
 
 
