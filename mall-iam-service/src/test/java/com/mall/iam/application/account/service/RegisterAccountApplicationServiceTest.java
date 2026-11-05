@@ -2,9 +2,9 @@ package com.mall.iam.application.account.service;
 
 import com.mall.common.exception.BusinessException;
 import com.mall.iam.application.account.command.RegisterAccountCommand;
-import com.mall.iam.application.account.port.event.RegistrationEventDispatcher;
 import com.mall.iam.application.account.port.verification.RegistrationCodeVerifier;
 import com.mall.iam.application.account.result.RegisterAccountResult;
+import com.mall.iam.application.shared.port.outbox.OutboxDispatchPort;
 import com.mall.iam.domain.account.repository.AccountRepository;
 import com.mall.iam.domain.account.service.PasswordPolicy;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ class RegisterAccountApplicationServiceTest {
     private final RegisterAccountTransactionService tx = mock(RegisterAccountTransactionService.class);
     private final RegistrationCodeVerifier verifier = mock(RegistrationCodeVerifier.class);
     private final AccountRepository repository = mock(AccountRepository.class);
-    private final RegistrationEventDispatcher dispatcher = mock(RegistrationEventDispatcher.class);
+    private final OutboxDispatchPort dispatcher = mock(OutboxDispatchPort.class);
     private RegisterAccountApplicationService service;
     private final RegisterAccountCommand command = new RegisterAccountCommand(
             "alice01", "Test@123456", "13812345678", null, "Alice", "123456");

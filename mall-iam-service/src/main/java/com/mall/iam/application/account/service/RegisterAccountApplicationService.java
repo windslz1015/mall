@@ -4,10 +4,10 @@ import com.mall.common.exception.BusinessException;
 import com.mall.iam.application.account.command.RegisterAccountCommand;
 import com.mall.iam.application.account.port.verification.RegistrationCodeVerifier;
 import com.mall.iam.application.account.result.RegisterAccountResult;
+import com.mall.iam.application.shared.port.outbox.OutboxDispatchPort;
 import com.mall.iam.domain.account.error.AccountErrorCode;
 import com.mall.iam.domain.account.repository.AccountRepository;
 import com.mall.iam.domain.account.service.PasswordPolicy;
-import com.mall.iam.application.account.port.event.RegistrationEventDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -23,13 +23,13 @@ public class RegisterAccountApplicationService {
     private final RegistrationCodeVerifier codeVerifier;
     private final PasswordPolicy passwordPolicy;
     private final AccountRepository accountRepository;
-    private final RegistrationEventDispatcher outboxDispatcher;
+    private final OutboxDispatchPort outboxDispatcher;
 
     public RegisterAccountApplicationService(RegisterAccountTransactionService transactionService,
                                              RegistrationCodeVerifier codeVerifier,
                                              PasswordPolicy passwordPolicy,
                                              AccountRepository accountRepository,
-                                             RegistrationEventDispatcher outboxDispatcher) {
+                                             OutboxDispatchPort  outboxDispatcher) {
         this.transactionService = transactionService;
         this.codeVerifier = codeVerifier;
         this.passwordPolicy = passwordPolicy;

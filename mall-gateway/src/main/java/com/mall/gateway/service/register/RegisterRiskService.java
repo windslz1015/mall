@@ -13,6 +13,8 @@ public class RegisterRiskService {
 
     private final ReactiveStringRedisTemplate redis;
 
+    private final DefaultRedisScript<Long> script;
+
     private static final String LUA = """
             local count = redis.call('INCR', KEYS[1])
             if count == 1 then
@@ -21,13 +23,8 @@ public class RegisterRiskService {
             return count
             """;
 
-    private final DefaultRedisScript<Long> script;
-
-    public RegisterRiskService(
-            ReactiveStringRedisTemplate redis) {
-
+    public RegisterRiskService(ReactiveStringRedisTemplate redis) {
         this.redis = redis;
-
         this.script = new DefaultRedisScript<>();
         this.script.setScriptText(LUA);
         this.script.setResultType(Long.class);
@@ -35,30 +32,18 @@ public class RegisterRiskService {
 
     // 检查IP注册频率：10分钟最多20次
     public Mono<Boolean> checkIp(String ip) {
-
         String key = "risk:register:ip:" + ip;
-
         return checkLimit(key, 600, 20);
     }
 
-    // 检查手机号注册频率：1小时最多5次
-    // 参数必须是服务端生成的不可逆HMAC标识
+    //检查手机号注册频率：1小时最多5次，参数必须是服务端生成的不可逆HMAC标识
     public Mono<Boolean> checkPhoneKey(String phoneKey) {
-
         String key = "risk:register:phone:" + phoneKey;
-
         return checkLimit(key, 3600, 5);
     }
 
-    private Mono<Boolean> checkLimit(
-            String key, int seconds, int maxCount) {
-
-        return redis.execute(
-                        script,
-                        List.of(key),
-                        List.of(String.valueOf(seconds))
-                )
-                .next()
-                .map(count -> count <= maxCount);
+    //限流方法：redis计数，拿到计数值出来判断是否超过上限。
+    private Mono<Boolean> checkLimit(String key, int seconds, int maxCount) {
+        return redis.execute(script, List.of(key), List.of(String.valueOf(seconds))).next().map(count -> count <= maxCount);
     }
 }

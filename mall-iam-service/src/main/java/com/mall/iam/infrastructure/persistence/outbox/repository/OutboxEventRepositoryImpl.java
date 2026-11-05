@@ -22,11 +22,15 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
     @Override
     public Long save(OutboxEvent event) {
         String sql = """
-            INSERT INTO outbox_event (event_id, aggregate_type, aggregate_id,
-                                      event_type, payload, status, retry_count, biz_key)
-            VALUES (:eventId, :aggregateType, :aggregateId,
-                    :eventType, :payload, 'PENDING', 0, :bizKey)
-            """;
+        INSERT INTO outbox_event (
+            event_id, aggregate_type, aggregate_id,
+            event_type, payload, status, retry_count, biz_key
+        )
+        VALUES (
+            :eventId, :aggregateType, :aggregateId,
+            :eventType, :payload, 'PENDING', 0, :bizKey
+        )
+        """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("eventId", event.getEventId())
@@ -34,27 +38,23 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
                 .addValue("aggregateId", event.getAggregateId())
                 .addValue("eventType", event.getEventType())
                 .addValue("payload", event.getPayload())
-                .addValue("bizKey", event.getEventType() + ":" + event.getAggregateId());
+                .addValue("bizKey",
+                        event.getEventType() + ":" + event.getAggregateId());
 
-        // 获取 MySQL 自动生成的主键
+        // 1创建主键接收器
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        // 2先执行 INSERT，获取数据库生成的主键
+        int affected = jdbc.update(sql, params, keyHolder, new String[]{"id"});
+        // 3检查插入结果
+        if (affected != 1) {throw new IllegalStateException("Outbox事件保存失败");}
+
+        // 4再获取自增主键
         Number id = keyHolder.getKey();
 
-        if (id == null) {
-            throw new IllegalStateException("获取Outbox自增ID失败");
-        }
+        if (id == null) {throw new IllegalStateException("获取Outbox自增ID失败");}
 
-        int affected = jdbc.update(
-                sql,
-                params,
-                keyHolder,
-                new String[]{"id"}
-        );
-
-        if (affected != 1) {
-            throw new IllegalStateException("Outbox事件保存失败");
-        }
-
+        // 5. 返回主键
         return id.longValue();
     }
 

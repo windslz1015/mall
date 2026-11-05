@@ -32,15 +32,11 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         }
         // 2其他接口需要进行token认证
         //token认证:
-        String authorization =
-                request.getHeaders().getFirst("Authorization");
+        String authorization = request.getHeaders().getFirst("Authorization");
 
-        if (authorization == null
-                || !authorization.startsWith("Bearer ")
+        if (authorization == null || !authorization.startsWith("Bearer ")
                 || authorization.substring(7).isBlank()) {
-
-            exchange.getResponse()
-                    .setStatusCode(HttpStatus.UNAUTHORIZED);
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
 
             return exchange.getResponse().setComplete();
         }
@@ -49,8 +45,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         // 当前仅检查Authorization格式，不代表认证通过
         // 未接入认证服务前，不应直接放行受保护接口
 
-        exchange.getResponse()
-                .setStatusCode(HttpStatus.UNAUTHORIZED);
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
 
         return exchange.getResponse().setComplete();
     }

@@ -1,7 +1,7 @@
 package com.mall.iam.infrastructure.messaging.outbox;
 
+import com.mall.iam.application.shared.port.outbox.OutboxDispatchPort;
 import com.mall.iam.domain.outbox.model.OutboxDelivery;
-import com.mall.iam.application.account.port.event.RegistrationEventDispatcher;
 import com.mall.iam.domain.outbox.repository.OutboxEventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.RejectedExecutionException;
 
 @Service
-public class OutboxDispatchService implements RegistrationEventDispatcher {
+public class OutboxDispatchService implements OutboxDispatchPort {
     private static final Logger log = LoggerFactory.getLogger(OutboxDispatchService.class);
     private final OutboxEventRepository repository;
     private final OutboxPublisher publisher;
@@ -34,20 +34,13 @@ public class OutboxDispatchService implements RegistrationEventDispatcher {
         try {
             executor.execute(() -> dispatch(outboxId));
         } catch (RejectedExecutionException e) {
-            log.warn(
-                    "Outbox 线程池拒绝任务，等待定时任务补偿 outboxId={}",
-                    outboxId
-            );
+            log.warn("Outbox 线程池拒绝任务，等待定时任务补偿 outboxId={}", outboxId);
         } catch (RuntimeException e) {
-            log.error(
-                    "Outbox 提交异步任务异常，等待定时任务补偿 outboxId={}",
-                    outboxId,
-                    e
-            );
+            log.error("Outbox 提交异步任务异常，等待定时任务补偿 outboxId={}", outboxId, e);
         }
     }
 
-    /** 多实例通过 claim 的条件更新抢占消息；宕机由租约过期后重新扫描。 */
+    /** 多实例通过claim的条件更新抢占消息；宕机由租约过期后重新扫描。*/
     public void dispatch(Long outboxId) {
         String claimToken = UUID.randomUUID().toString();
         try {

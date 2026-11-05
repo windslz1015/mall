@@ -1,10 +1,8 @@
 package com.mall.iam.infrastructure.config;
 
+import com.mall.iam.infrastructure.messaging.outbox.IamRabbitRouting;
 import com.mall.iam.infrastructure.messaging.outbox.OutboxPublisher;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -14,13 +12,17 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableScheduling
 public class OutboxConfig {
     @Bean public DirectExchange accountExchange() {
-        return new DirectExchange(OutboxPublisher.EXCHANGE, true, false);
+        return new DirectExchange(IamRabbitRouting.EXCHANGE, true, false);
     }
     @Bean public Queue accountRegisteredQueue() {
         return new Queue("iam.account.registered", true);
     }
     @Bean public Binding accountRegisteredBinding(Queue accountRegisteredQueue, DirectExchange accountExchange) {
-        return BindingBuilder.bind(accountRegisteredQueue).to(accountExchange).with(OutboxPublisher.ROUTING_KEY);
+        return BindingBuilder.bind(accountRegisteredQueue).to(accountExchange).with(IamRabbitRouting.ROUTING_KEY);
+    }
+    @Bean
+    public TopicExchange iamEventsExchange() {
+        return new TopicExchange(IamRabbitRouting.EXCHANGE, true, false);
     }
     @Bean("outboxExecutor") public ThreadPoolTaskExecutor outboxExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

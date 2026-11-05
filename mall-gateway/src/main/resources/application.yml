@@ -1,3 +1,4 @@
+# 自定义业务配置
 gateway:
   security:
     trusted-nginx-ip: ${TRUSTED_NGINX_IP:192.168.195.128}
@@ -24,7 +25,7 @@ spring:
               order: -10
               uri: lb://iam-service
               predicates:
-                - Path=/api/iam/auth/register,/api/iam/auth/register/code
+                - Path=/api/iam/auth/register, /api/iam/auth/register/code
                 - Method=POST
               filters:
                 - name: RegisterValidation

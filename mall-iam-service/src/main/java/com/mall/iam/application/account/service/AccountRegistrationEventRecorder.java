@@ -29,8 +29,7 @@ public class AccountRegistrationEventRecorder {
 
         String eventId = UUID.randomUUID().toString();
 
-        String bizKey =
-                "AccountRegistered:" + account.getAccountNo();
+        String bizKey = "AccountRegistered:" + account.getAccountNo();
 
         AccountRegisteredEvent registeredEvent =
                 new AccountRegisteredEvent(
@@ -45,14 +44,9 @@ public class AccountRegistrationEventRecorder {
         String payload;
 
         try {
-            payload = objectMapper.writeValueAsString(
-                    registeredEvent
-            );
+            payload = objectMapper.writeValueAsString(registeredEvent);
         } catch (JsonProcessingException e) {
-            throw new IllegalStateException(
-                    "注册成功事件序列化失败",
-                    e
-            );
+            throw new IllegalStateException("注册成功事件序列化失败", e);
         }
 
         OutboxEvent outboxEvent = OutboxEvent.pending(
