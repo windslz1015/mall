@@ -1,6 +1,6 @@
 package com.mall.iam.infrastructure.persistence.outbox.repository;
 
-import com.mall.iam.domain.outbox.model.OutboxDelivery;
+import com.mall.iam.domain.outbox.projection.OutboxDelivery;
 import com.mall.iam.domain.outbox.model.OutboxEvent;
 import com.mall.iam.domain.outbox.repository.OutboxEventRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -36,7 +36,7 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
                 .addValue("eventId", event.getEventId())
                 .addValue("aggregateType", event.getAggregateType())
                 .addValue("aggregateId", event.getAggregateId())
-                .addValue("eventType", event.getEventType())
+                .addValue("eventType", event.getEventType().name())
                 .addValue("payload", event.getPayload())
                 .addValue("bizKey", event.getBizKey());
 

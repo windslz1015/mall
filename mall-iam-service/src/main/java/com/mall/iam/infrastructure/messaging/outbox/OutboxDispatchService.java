@@ -1,12 +1,11 @@
 package com.mall.iam.infrastructure.messaging.outbox;
 
 import com.mall.iam.application.shared.port.outbox.OutboxDispatchPort;
-import com.mall.iam.domain.outbox.model.OutboxDelivery;
+import com.mall.iam.domain.outbox.projection.OutboxDelivery;
 import com.mall.iam.domain.outbox.repository.OutboxEventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.task.TaskRejectedException;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 

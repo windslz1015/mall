@@ -1,6 +1,6 @@
 package com.mall.iam.infrastructure.messaging.outbox;
 
-import com.mall.iam.domain.outbox.model.OutboxDelivery;
+import com.mall.iam.domain.outbox.projection.OutboxDelivery;
 import com.mall.iam.domain.outbox.repository.OutboxEventRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;

@@ -1,7 +1,7 @@
 
 package com.mall.iam.infrastructure.messaging.outbox;
 
-import com.mall.iam.domain.outbox.model.OutboxDelivery;
+import com.mall.iam.domain.outbox.projection.OutboxDelivery;
 import com.mall.iam.domain.outbox.model.OutboxEventType;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageDeliveryMode;
@@ -11,7 +11,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
