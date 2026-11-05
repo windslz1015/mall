@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+
 @Component
 public class OutboxPublisher {
 
@@ -31,9 +32,9 @@ public class OutboxPublisher {
      * 不保证消费者已经处理成功。
      */
     public void publish(OutboxDelivery event) throws Exception {
-
-        // 1. 根据事件类型查找路由
-        String routingKey = ROUTING_KEYS.get(event.eventType());
+        OutboxEventType eventType = OutboxEventType.valueOf(event.eventType());
+        //1根据事件类型查找路由
+        String routingKey = resolveRoutingKey(eventType);
 
         if (routingKey == null) {
             throw new IllegalArgumentException("不支持的 Outbox 事件类型: " + event.eventType());
@@ -49,33 +50,26 @@ public class OutboxPublisher {
         properties.setMessageId(event.eventId());
         properties.setHeader("eventType", event.eventType());
 
-        // 3. 使用原始 JSON 字节，避免重复序列化
+        // 3使用原始 JSON 字节，避免重复序列化
         Message message = new Message(
                 event.payload().getBytes(StandardCharsets.UTF_8),
                 properties
         );
 
-        // 4. 关联发布确认
-        CorrelationData correlation =
-                new CorrelationData(event.eventId());
+        // 4关联发布确认
+        CorrelationData correlation = new CorrelationData(event.eventId());
 
-        // 5. 发送到 RabbitMQ
-        template.send(
-                IamRabbitRouting.EXCHANGE,
-                routingKey,
-                message,
-                correlation
-        );
+        // 5发送到RabbitMQ
+        template.send(IamRabbitRouting.EXCHANGE, routingKey, message, correlation);
 
-        // 6. 等待 Broker 发布确认
-        CorrelationData.Confirm confirm =
-                correlation.getFuture().get(10, TimeUnit.SECONDS);
+        //6等待Broker发布确认
+        CorrelationData.Confirm confirm = correlation.getFuture().get(10, TimeUnit.SECONDS);
 
         if (!confirm.isAck()) {
             throw new IllegalStateException("RabbitMQ Broker NACK: " + confirm.getReason());
         }
 
-        // 7. 检查消息是否成功路由到队列
+        //7检查消息是否成功路由到队列
         if (correlation.getReturned() != null) {
             throw new IllegalStateException("RabbitMQ 消息路由失败: " + correlation.getReturned().getReplyText());
         }

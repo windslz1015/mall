@@ -38,8 +38,7 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
                 .addValue("aggregateId", event.getAggregateId())
                 .addValue("eventType", event.getEventType())
                 .addValue("payload", event.getPayload())
-                .addValue("bizKey",
-                        event.getEventType() + ":" + event.getAggregateId());
+                .addValue("bizKey", event.getBizKey());
 
         // 1创建主键接收器
         KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -5,26 +5,26 @@ public class OutboxEvent {
 
     private final String eventId;
 
-    private final String aggregateType;
+    private final String aggregateType; //聚合类型
 
-    private final String aggregateId;
+    private final String aggregateId; //聚合标识
 
-    private final String eventType;
+    private final OutboxEventType eventType;
 
-    private final String payload;
+    private final String payload;  //序列化的事件内容
 
-    // 业务幂等键
-    private final String bizKey;
 
-    private final OutboxEventStatus status;
+    private final String bizKey;// 业务幂等键
 
-    private final int retryCount;
+    private final OutboxEventStatus status; //投递状态
+
+    private final int retryCount; //重试次数
 
     private OutboxEvent(
             String eventId,
             String aggregateType,
             String aggregateId,
-            String eventType,
+            OutboxEventType eventType,
             String payload,
             String bizKey,
             OutboxEventStatus status,
@@ -46,7 +46,7 @@ public class OutboxEvent {
             String eventId,
             String aggregateType,
             String aggregateId,
-            String eventType,
+            OutboxEventType eventType,
             String payload,
             String bizKey) {
 
@@ -63,7 +63,7 @@ public class OutboxEvent {
             throw new IllegalArgumentException("聚合标识不能为空");
         }
 
-        if (eventType == null || eventType.isBlank()) {
+        if (eventType == null) {
             throw new IllegalArgumentException("事件类型不能为空");
         }
 
@@ -101,7 +101,7 @@ public class OutboxEvent {
         return aggregateId;
     }
 
-    public String getEventType() {
+    public OutboxEventType getEventType() {
         return eventType;
     }
 

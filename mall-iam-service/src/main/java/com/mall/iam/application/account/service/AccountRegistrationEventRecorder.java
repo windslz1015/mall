@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mall.iam.application.account.event.AccountRegisteredEvent;
 import com.mall.iam.domain.account.model.Account;
 import com.mall.iam.domain.outbox.model.OutboxEvent;
+import com.mall.iam.domain.outbox.model.OutboxEventType;
 import com.mall.iam.domain.outbox.repository.OutboxEventRepository;
 import org.springframework.stereotype.Component;
 
@@ -38,9 +39,7 @@ public class AccountRegistrationEventRecorder {
                         account.getAccountNo(),
                         account.getUsername(),
                         account.getAccountType().getCode(),
-                        Instant.now().toString()
-                );
-
+                        Instant.now().toString());
         String payload;
 
         try {
@@ -53,7 +52,7 @@ public class AccountRegistrationEventRecorder {
                 eventId,
                 "Account",
                 account.getAccountNo(),
-                "AccountRegistered",
+                OutboxEventType.ACCOUNT_REGISTERED,
                 payload,
                 bizKey
         );

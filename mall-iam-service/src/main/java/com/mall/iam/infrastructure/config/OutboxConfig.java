@@ -18,7 +18,7 @@ public class OutboxConfig {
         return new Queue("iam.account.registered", true);
     }
     @Bean public Binding accountRegisteredBinding(Queue accountRegisteredQueue, DirectExchange accountExchange) {
-        return BindingBuilder.bind(accountRegisteredQueue).to(accountExchange).with(IamRabbitRouting.ROUTING_KEY);
+        return BindingBuilder.bind(accountRegisteredQueue).to(accountExchange).with(IamRabbitRouting.ACCOUNT_REGISTERED);
     }
     @Bean
     public TopicExchange iamEventsExchange() {
