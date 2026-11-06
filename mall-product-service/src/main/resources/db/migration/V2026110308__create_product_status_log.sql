@@ -13,7 +13,6 @@ CREATE TABLE product_status_log (
     UNIQUE KEY uk_product_status_log_id_product (id, product_id),
     KEY idx_product_status_log_product_time (product_id, occurred_at, id),
     KEY idx_product_status_log_operator (operator_account_id, occurred_at),
-    CONSTRAINT fk_product_status_log_product FOREIGN KEY (product_id) REFERENCES product(id),
     CONSTRAINT ck_product_status_log_old CHECK (previous_status IN (0, 1, 2, 3)),
     CONSTRAINT ck_product_status_log_new CHECK (new_status IN (0, 1, 2, 3)),
     CONSTRAINT ck_product_status_log_diff CHECK (previous_status <> new_status),

@@ -16,8 +16,6 @@ CREATE TABLE merchant (
     UNIQUE KEY uk_merchant_no (merchant_no),
     UNIQUE KEY uk_merchant_source_application (source_application_id),
     KEY idx_merchant_status_created (status, created_at, id),
-    CONSTRAINT fk_merchant_source_application
-        FOREIGN KEY (source_application_id) REFERENCES merchant_application(id),
     CONSTRAINT ck_merchant_status CHECK (status IN (1, 2))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   COMMENT='商家经营主体表';

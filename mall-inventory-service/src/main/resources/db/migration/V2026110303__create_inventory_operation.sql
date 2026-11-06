@@ -19,12 +19,6 @@ CREATE TABLE inventory_operation (
     UNIQUE KEY uk_inventory_operation_id_reservation (id, reservation_id),
     KEY idx_inventory_operation_stock_time (inventory_id, created_at, id),
     KEY idx_inventory_operation_reservation (reservation_id, id),
-    CONSTRAINT fk_inventory_operation_stock FOREIGN KEY (inventory_id)
-        REFERENCES inventory_stock(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_inventory_operation_reservation_stock
-        FOREIGN KEY (reservation_id, inventory_id)
-        REFERENCES inventory_reservation(id, inventory_id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_inventory_operation_type CHECK (operation_type IN (1, 2, 3, 4)),
     CONSTRAINT ck_inventory_operation_reservation_type CHECK (
         (operation_type = 1 AND reservation_id IS NULL)

@@ -23,7 +23,6 @@ CREATE TABLE product_sku (
     UNIQUE KEY uk_product_sku_merchant_code (product_id, merchant_sku_code),
     UNIQUE KEY uk_product_sku_id_product (id, product_id),
     KEY idx_product_sku_product_status (product_id, status, id),
-    CONSTRAINT fk_product_sku_product FOREIGN KEY (product_id) REFERENCES product(id),
     CONSTRAINT ck_product_sku_status CHECK (status IN (1, 2)),
     CONSTRAINT ck_product_sku_price CHECK (sale_price >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

@@ -27,8 +27,7 @@ CREATE TABLE reliability_reconciliation_batch (
     KEY idx_reliability_reconciliation_type_status (reconciliation_type, status, created_at, id),
     KEY idx_reliability_reconciliation_execution (job_execution_id),
     KEY idx_reliability_reconciliation_time (window_start_at, window_end_at),
-    CONSTRAINT fk_reliability_reconciliation_execution FOREIGN KEY (job_execution_id)
-        REFERENCES reliability_job_execution (id),
+
     CONSTRAINT ck_reliability_reconciliation_type CHECK
         (reconciliation_type IN ('ORDER_PAYMENT', 'ORDER_INVENTORY', 'PAYMENT_CHANNEL', 'CUSTOM')),
     CONSTRAINT ck_reliability_reconciliation_window CHECK (window_end_at > window_start_at),

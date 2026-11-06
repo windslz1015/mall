@@ -25,8 +25,6 @@ CREATE TABLE trade_order_operation (
         (source_service, operation_type, request_key),
     KEY idx_trade_order_operation_order (target_order_id, operation_type, id),
     KEY idx_trade_order_operation_status_time (status, updated_at, id),
-    CONSTRAINT fk_trade_order_operation_order FOREIGN KEY (target_order_id)
-        REFERENCES trade_order(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_trade_order_operation_type CHECK (operation_type IN (1, 2, 3, 4, 5, 6)),
     CONSTRAINT ck_trade_order_operation_status CHECK (status IN (1, 2, 3))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

@@ -24,11 +24,7 @@ CREATE TABLE payment_record (
     UNIQUE KEY uk_payment_record_channel_trade (channel_code, channel_trade_no),
     KEY idx_payment_record_order_confirmed (payment_order_id, confirmed_at, id),
     KEY idx_payment_record_review (review_status, confirmed_at, id),
-    CONSTRAINT fk_payment_record_order FOREIGN KEY (payment_order_id)
-        REFERENCES payment_order (id),
-    CONSTRAINT fk_payment_record_attempt_order
-        FOREIGN KEY (payment_attempt_id, payment_order_id)
-        REFERENCES payment_attempt (id, payment_order_id),
+
     CONSTRAINT ck_payment_record_amount CHECK (paid_amount > 0),
     CONSTRAINT ck_payment_record_currency CHECK (currency = 'CNY'),
     CONSTRAINT ck_payment_record_review CHECK (review_status IN (0, 10, 20, 30, 40))

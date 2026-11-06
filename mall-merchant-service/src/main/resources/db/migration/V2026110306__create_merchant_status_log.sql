@@ -10,8 +10,6 @@ CREATE TABLE merchant_status_log (
     PRIMARY KEY (id),
     KEY idx_merchant_status_log_merchant_time (merchant_id, occurred_at, id),
     KEY idx_merchant_status_log_operator_time (operator_account_id, occurred_at),
-    CONSTRAINT fk_merchant_status_log_merchant
-        FOREIGN KEY (merchant_id) REFERENCES merchant(id),
     CONSTRAINT ck_merchant_status_log_previous CHECK (previous_status IN (1, 2)),
     CONSTRAINT ck_merchant_status_log_new CHECK (new_status IN (1, 2)),
     CONSTRAINT ck_merchant_status_log_changed CHECK (previous_status <> new_status)

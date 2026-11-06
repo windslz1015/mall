@@ -26,8 +26,7 @@ CREATE TABLE reliability_message_failure (
     KEY idx_reliability_message_failure_status (status, last_failed_at, id),
     KEY idx_reliability_message_failure_task (recovery_task_id),
     KEY idx_reliability_message_failure_event (event_id),
-    CONSTRAINT fk_reliability_message_failure_task FOREIGN KEY (recovery_task_id)
-        REFERENCES reliability_recovery_task (id),
+
     CONSTRAINT ck_reliability_message_failure_status CHECK (status IN (0, 10, 20, 30)),
     CONSTRAINT ck_reliability_message_failure_count CHECK (failure_count > 0),
     CONSTRAINT ck_reliability_message_failure_time CHECK (last_failed_at >= first_failed_at),

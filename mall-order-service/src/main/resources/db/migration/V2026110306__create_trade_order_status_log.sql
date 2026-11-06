@@ -13,8 +13,7 @@ CREATE TABLE trade_order_status_log (
     PRIMARY KEY (id),
     KEY idx_trade_order_status_log_order (order_id, occurred_at, id),
     KEY idx_trade_order_status_log_event (source_event_id),
-    CONSTRAINT fk_trade_order_status_log_parent FOREIGN KEY (order_id)
-        REFERENCES trade_order(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+
     CONSTRAINT ck_trade_order_status_log_from CHECK (
         from_status IS NULL OR from_status IN (0, 10, 20, 30, 40)
     ),

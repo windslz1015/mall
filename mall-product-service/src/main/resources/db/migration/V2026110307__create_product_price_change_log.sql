@@ -13,8 +13,7 @@ CREATE TABLE product_price_change_log (
     PRIMARY KEY (id),
     KEY idx_product_price_sku_time (sku_id, changed_at, id),
     KEY idx_product_price_product_time (product_id, changed_at, id),
-    CONSTRAINT fk_product_price_sku_product
-        FOREIGN KEY (sku_id, product_id) REFERENCES product_sku(id, product_id),
+
     CONSTRAINT ck_product_price_old CHECK (old_price >= 0),
     CONSTRAINT ck_product_price_new CHECK (new_price >= 0),
     CONSTRAINT ck_product_price_diff CHECK (old_price <> new_price)

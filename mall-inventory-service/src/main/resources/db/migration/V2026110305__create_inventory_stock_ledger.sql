@@ -19,14 +19,6 @@ CREATE TABLE inventory_stock_ledger (
     UNIQUE KEY uk_inventory_stock_ledger_operation (operation_id),
     KEY idx_inventory_stock_ledger_stock_time (inventory_id, created_at, id),
     KEY idx_inventory_stock_ledger_reservation_time (reservation_id, created_at, id),
-    CONSTRAINT fk_inventory_stock_ledger_operation_stock
-        FOREIGN KEY (operation_id, inventory_id)
-        REFERENCES inventory_operation(id, inventory_id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_inventory_stock_ledger_reservation_stock
-        FOREIGN KEY (reservation_id, inventory_id)
-        REFERENCES inventory_reservation(id, inventory_id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_inventory_stock_ledger_before CHECK
         (on_hand_before = available_before + reserved_before),
     CONSTRAINT ck_inventory_stock_ledger_after CHECK

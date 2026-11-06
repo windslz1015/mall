@@ -18,10 +18,7 @@ CREATE TABLE reliability_reconciliation_resolution_log (
     KEY idx_reliability_resolution_difference_time (difference_id, occurred_at, id),
     KEY idx_reliability_resolution_task (recovery_task_id),
     KEY idx_reliability_resolution_actor (actor_account_id, occurred_at),
-    CONSTRAINT fk_reliability_resolution_difference FOREIGN KEY (difference_id)
-        REFERENCES reliability_reconciliation_difference (id),
-    CONSTRAINT fk_reliability_resolution_recovery FOREIGN KEY (recovery_task_id)
-        REFERENCES reliability_recovery_task (id),
+
     CONSTRAINT ck_reliability_resolution_from CHECK
         (from_status IS NULL OR from_status IN (0, 10, 20, 30)),
     CONSTRAINT ck_reliability_resolution_to CHECK

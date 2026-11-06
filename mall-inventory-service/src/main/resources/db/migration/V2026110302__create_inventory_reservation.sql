@@ -25,8 +25,6 @@ CREATE TABLE inventory_reservation (
     KEY idx_inventory_reservation_sub_order (sub_order_id, id),
     KEY idx_inventory_reservation_stock_status (inventory_id, status, id),
     KEY idx_inventory_reservation_expiry (status, expires_at, id),
-    CONSTRAINT fk_inventory_reservation_stock FOREIGN KEY (inventory_id)
-        REFERENCES inventory_stock(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_inventory_reservation_quantity CHECK (quantity > 0),
     CONSTRAINT ck_inventory_reservation_status CHECK (status IN (1, 2, 3))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

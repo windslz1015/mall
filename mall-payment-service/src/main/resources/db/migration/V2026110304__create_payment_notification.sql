@@ -29,8 +29,7 @@ CREATE TABLE payment_notification (
     KEY idx_payment_notification_status_time (process_status, updated_at, id),
     KEY idx_payment_notification_order (payment_order_id, received_at, id),
     KEY idx_payment_notification_trade (channel_code, channel_trade_no),
-    CONSTRAINT fk_payment_notification_order FOREIGN KEY (payment_order_id)
-        REFERENCES payment_order (id),
+
     CONSTRAINT ck_payment_notification_signature CHECK (signature_valid IN (0, 1)),
     CONSTRAINT ck_payment_notification_status CHECK (process_status IN (0, 10, 20, 30, 40)),
     CONSTRAINT ck_payment_notification_receive CHECK (receive_count > 0),

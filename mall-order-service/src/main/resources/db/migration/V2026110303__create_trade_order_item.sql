@@ -23,10 +23,6 @@ CREATE TABLE trade_order_item (
     UNIQUE KEY uk_trade_order_item_sub_sku (sub_order_id, sku_id),
     KEY idx_trade_order_item_parent (order_id, sub_order_id, id),
     KEY idx_trade_order_item_sku (sku_id, created_at, id),
-    CONSTRAINT fk_trade_order_item_parent_sub
-        FOREIGN KEY (sub_order_id, order_id)
-        REFERENCES trade_sub_order(id, order_id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_trade_order_item_quantity CHECK (quantity > 0),
     CONSTRAINT ck_trade_order_item_money CHECK (
         unit_price >= 0 AND line_amount >= 0

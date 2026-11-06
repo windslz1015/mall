@@ -27,8 +27,7 @@ CREATE TABLE reliability_job_execution (
     KEY idx_reliability_execution_job_time (job_id, scheduled_at, id),
     KEY idx_reliability_execution_status_time (status, scheduled_at, id),
     KEY idx_reliability_execution_lease (status, lease_expires_at),
-    CONSTRAINT fk_reliability_execution_job FOREIGN KEY (job_id)
-        REFERENCES reliability_job_definition (id),
+
     CONSTRAINT ck_reliability_execution_trigger CHECK (trigger_kind IN (1, 2)),
     CONSTRAINT ck_reliability_execution_slot CHECK
         ((trigger_kind = 1 AND scheduled_slot_key IS NOT NULL)

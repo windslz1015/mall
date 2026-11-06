@@ -19,8 +19,7 @@ CREATE TABLE payment_operation (
     UNIQUE KEY uk_payment_operation_request (source_service, operation_type, request_key),
     KEY idx_payment_operation_order (payment_order_id, created_at, id),
     KEY idx_payment_operation_status_updated (status, updated_at, id),
-    CONSTRAINT fk_payment_operation_order FOREIGN KEY (payment_order_id)
-        REFERENCES payment_order (id),
+
     CONSTRAINT ck_payment_operation_status CHECK (status IN (1, 2, 3))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   COMMENT='支付关键操作幂等记录（只建表，不实现幂等逻辑）';

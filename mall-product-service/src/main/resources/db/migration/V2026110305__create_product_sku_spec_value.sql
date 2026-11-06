@@ -8,11 +8,5 @@ CREATE TABLE product_sku_spec_value (
     PRIMARY KEY (sku_id, spec_id),
     KEY idx_sku_spec_spec_product (spec_id, product_id),
     KEY idx_sku_spec_value_spec (spec_value_id, spec_id),
-    CONSTRAINT fk_sku_spec_sku_product
-        FOREIGN KEY (sku_id, product_id) REFERENCES product_sku(id, product_id),
-    CONSTRAINT fk_sku_spec_spec_product
-        FOREIGN KEY (spec_id, product_id) REFERENCES product_spec(id, product_id),
-    CONSTRAINT fk_sku_spec_value_spec
-        FOREIGN KEY (spec_value_id, spec_id) REFERENCES product_spec_value(id, spec_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   COMMENT='SKU选定规格值关系';

@@ -13,8 +13,6 @@ CREATE TABLE product_moderation_log (
     UNIQUE KEY uk_product_moderation_status_log (status_log_id),
     KEY idx_product_moderation_product_time (product_id, handled_at, id),
     KEY idx_product_moderation_admin_time (admin_account_id, handled_at),
-    CONSTRAINT fk_product_moderation_status_product
-        FOREIGN KEY (status_log_id, product_id) REFERENCES product_status_log(id, product_id),
     CONSTRAINT ck_product_moderation_action CHECK (action_type = 1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   COMMENT='平台商品强制下架监管记录';

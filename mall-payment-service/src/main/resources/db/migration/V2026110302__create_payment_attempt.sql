@@ -22,8 +22,6 @@ CREATE TABLE payment_attempt (
     UNIQUE KEY uk_payment_attempt_channel_request (channel_code, channel_request_no),
     UNIQUE KEY uk_payment_attempt_id_order (id, payment_order_id),
     KEY idx_payment_attempt_order_status (payment_order_id, status, created_at),
-    CONSTRAINT fk_payment_attempt_order FOREIGN KEY (payment_order_id)
-        REFERENCES payment_order (id),
     CONSTRAINT ck_payment_attempt_seq CHECK (attempt_no > 0),
     CONSTRAINT ck_payment_attempt_status CHECK (status IN (0, 10, 20, 30, 40)),
     CONSTRAINT ck_payment_attempt_amount CHECK (request_amount > 0)

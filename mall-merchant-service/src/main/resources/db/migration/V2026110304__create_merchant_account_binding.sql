@@ -14,8 +14,6 @@ CREATE TABLE merchant_account_binding (
     UNIQUE KEY uk_merchant_account_binding (merchant_id, account_id),
     KEY idx_merchant_account_binding_account (account_id, status, merchant_id),
     KEY idx_merchant_account_binding_merchant (merchant_id, status),
-    CONSTRAINT fk_merchant_account_binding_merchant
-        FOREIGN KEY (merchant_id) REFERENCES merchant(id),
     CONSTRAINT ck_merchant_account_binding_role CHECK (binding_role IN (1, 2)),
     CONSTRAINT ck_merchant_account_binding_status CHECK (status IN (1, 2))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

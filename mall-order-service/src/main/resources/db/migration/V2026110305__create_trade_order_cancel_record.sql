@@ -16,10 +16,6 @@ CREATE TABLE trade_order_cancel_record (
     UNIQUE KEY uk_trade_order_cancel_order (order_id),
     UNIQUE KEY uk_trade_order_cancel_operation (operation_id),
     KEY idx_trade_order_cancel_type_time (cancel_type, canceled_at, id),
-    CONSTRAINT fk_trade_order_cancel_parent FOREIGN KEY (order_id)
-        REFERENCES trade_order(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_trade_order_cancel_operation FOREIGN KEY (operation_id)
-        REFERENCES trade_order_operation(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_trade_order_cancel_previous_status CHECK (previous_status = 10),
     CONSTRAINT ck_trade_order_cancel_type CHECK (cancel_type IN (1, 2, 3)),
     CONSTRAINT ck_trade_order_cancel_actor CHECK (

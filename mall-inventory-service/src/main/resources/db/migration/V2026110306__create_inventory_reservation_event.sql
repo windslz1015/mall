@@ -11,14 +11,6 @@ CREATE TABLE inventory_reservation_event (
     PRIMARY KEY (id),
     UNIQUE KEY uk_inventory_reservation_event_operation (operation_id),
     KEY idx_inventory_reservation_event_reservation (reservation_id, occurred_at, id),
-    CONSTRAINT fk_inventory_reservation_event_operation_reservation
-        FOREIGN KEY (operation_id, reservation_id)
-        REFERENCES inventory_operation(id, reservation_id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_inventory_reservation_event_reservation
-        FOREIGN KEY (reservation_id)
-        REFERENCES inventory_reservation(id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_inventory_reservation_event_transition CHECK (
         (from_status IS NULL AND to_status = 1)
         OR (from_status = 1 AND to_status IN (2, 3))

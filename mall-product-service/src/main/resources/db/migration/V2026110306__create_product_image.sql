@@ -18,9 +18,7 @@ CREATE TABLE product_image (
     UNIQUE KEY uk_product_image_one_cover (product_id, cover_slot),
     KEY idx_product_image_product_type_sort (product_id, image_type, sort_no, id),
     KEY idx_product_image_sku_product (sku_id, product_id),
-    CONSTRAINT fk_product_image_product FOREIGN KEY (product_id) REFERENCES product(id),
-    CONSTRAINT fk_product_image_sku_product
-        FOREIGN KEY (sku_id, product_id) REFERENCES product_sku(id, product_id),
+
     CONSTRAINT ck_product_image_type CHECK (image_type IN (1, 2, 3)),
     CONSTRAINT ck_product_image_type_sku CHECK (
         (image_type = 3 AND sku_id IS NOT NULL)

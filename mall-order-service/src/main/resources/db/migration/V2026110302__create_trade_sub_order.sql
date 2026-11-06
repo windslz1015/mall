@@ -23,8 +23,6 @@ CREATE TABLE trade_sub_order (
     UNIQUE KEY uk_trade_sub_order_id_parent (id, order_id),
     KEY idx_trade_sub_order_merchant_status_time (merchant_id, status, created_at, id),
     KEY idx_trade_sub_order_merchant_time (merchant_id, created_at, id),
-    CONSTRAINT fk_trade_sub_order_parent FOREIGN KEY (order_id)
-        REFERENCES trade_order(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_trade_sub_order_status CHECK (status IN (0, 10, 20, 30, 40)),
     CONSTRAINT ck_trade_sub_order_amount CHECK (subtotal_amount >= 0),
     CONSTRAINT ck_trade_sub_order_status_timestamp CHECK (

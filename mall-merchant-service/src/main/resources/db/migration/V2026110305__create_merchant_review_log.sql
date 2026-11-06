@@ -10,8 +10,6 @@ CREATE TABLE merchant_review_log (
     PRIMARY KEY (id),
     KEY idx_merchant_review_application_time (application_id, reviewed_at, id),
     KEY idx_merchant_review_operator_time (reviewer_account_id, reviewed_at),
-    CONSTRAINT fk_merchant_review_application
-        FOREIGN KEY (application_id) REFERENCES merchant_application(id),
     CONSTRAINT ck_merchant_review_previous_status CHECK (previous_status IN (1, 2, 3)),
     CONSTRAINT ck_merchant_review_new_status CHECK (new_status IN (2, 3))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

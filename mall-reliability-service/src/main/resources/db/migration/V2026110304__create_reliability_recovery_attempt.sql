@@ -19,8 +19,7 @@ CREATE TABLE reliability_recovery_attempt (
     UNIQUE KEY uk_reliability_attempt_request (request_id),
     KEY idx_reliability_attempt_task_time (recovery_task_id, started_at, id),
     KEY idx_reliability_attempt_status_time (status, started_at),
-    CONSTRAINT fk_reliability_attempt_task FOREIGN KEY (recovery_task_id)
-        REFERENCES reliability_recovery_task (id),
+
     CONSTRAINT ck_reliability_attempt_positive CHECK (attempt_no > 0),
     CONSTRAINT ck_reliability_attempt_status CHECK (status IN (0, 10, 20, 30)),
     CONSTRAINT ck_reliability_attempt_finished CHECK

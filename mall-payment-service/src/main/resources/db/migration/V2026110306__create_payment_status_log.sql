@@ -12,10 +12,7 @@ CREATE TABLE payment_status_log (
     PRIMARY KEY (id),
     KEY idx_payment_status_log_order (payment_order_id, occurred_at, id),
     KEY idx_payment_status_log_operation (operation_id),
-    CONSTRAINT fk_payment_status_log_order FOREIGN KEY (payment_order_id)
-        REFERENCES payment_order (id),
-    CONSTRAINT fk_payment_status_log_operation FOREIGN KEY (operation_id)
-        REFERENCES payment_operation (id),
+
     CONSTRAINT ck_payment_status_log_from CHECK
         (from_status IS NULL OR from_status IN (0, 10, 20, 30, 40, 50)),
     CONSTRAINT ck_payment_status_log_to CHECK (to_status IN (0, 10, 20, 30, 40, 50))

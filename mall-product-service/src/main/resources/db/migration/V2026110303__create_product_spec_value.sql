@@ -10,6 +10,5 @@ CREATE TABLE product_spec_value (
     PRIMARY KEY (id),
     UNIQUE KEY uk_product_spec_value_name (spec_id, value_name),
     UNIQUE KEY uk_product_spec_value_id_spec (id, spec_id),
-    CONSTRAINT fk_product_spec_value_spec FOREIGN KEY (spec_id) REFERENCES product_spec(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   COMMENT='商品规格值（如黑色）';

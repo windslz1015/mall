@@ -29,10 +29,7 @@ CREATE TABLE reliability_reconciliation_difference (
     KEY idx_reliability_difference_business (business_domain, business_type, business_id),
     KEY idx_reliability_difference_task (recovery_task_id),
     KEY idx_reliability_difference_rule (rule_code, detected_at),
-    CONSTRAINT fk_reliability_difference_batch FOREIGN KEY (batch_id)
-        REFERENCES reliability_reconciliation_batch (id),
-    CONSTRAINT fk_reliability_difference_task FOREIGN KEY (recovery_task_id)
-        REFERENCES reliability_recovery_task (id),
+
     CONSTRAINT ck_reliability_difference_domain CHECK
         (business_domain IN ('IAM', 'MERCHANT', 'PRODUCT', 'CART', 'ORDER', 'INVENTORY', 'PAYMENT', 'ADMIN')),
     CONSTRAINT ck_reliability_difference_severity CHECK (severity IN (1, 2, 3, 4)),

@@ -15,10 +15,6 @@ CREATE TABLE inventory_adjustment (
     UNIQUE KEY uk_inventory_adjustment_operation (operation_id),
     KEY idx_inventory_adjustment_stock_time (inventory_id, created_at, id),
     KEY idx_inventory_adjustment_operator (operator_type, operator_account_id, created_at),
-    CONSTRAINT fk_inventory_adjustment_operation_stock
-        FOREIGN KEY (operation_id, inventory_id)
-        REFERENCES inventory_operation(id, inventory_id)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_inventory_adjustment_delta CHECK (quantity_delta <> 0),
     CONSTRAINT ck_inventory_adjustment_operator_type CHECK (operator_type IN (1, 2, 3)),
     CONSTRAINT ck_inventory_adjustment_operator CHECK (
