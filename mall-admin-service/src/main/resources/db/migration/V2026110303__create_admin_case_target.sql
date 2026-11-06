@@ -13,8 +13,6 @@ CREATE TABLE admin_case_target (
     UNIQUE KEY uk_admin_case_target_dedup (case_id, target_domain, target_type, target_id),
     UNIQUE KEY uk_admin_case_target_id_case (id, case_id),
     KEY idx_admin_case_target_resource (target_domain, target_type, target_id),
-    CONSTRAINT fk_admin_case_target_case FOREIGN KEY (case_id)
-        REFERENCES admin_regulation_case (id),
     CONSTRAINT ck_admin_case_target_domain CHECK
         (target_domain IN ('IAM', 'MERCHANT', 'PRODUCT', 'ORDER', 'PAYMENT')),
     CONSTRAINT ck_admin_case_target_role CHECK (target_role IN (1, 2))

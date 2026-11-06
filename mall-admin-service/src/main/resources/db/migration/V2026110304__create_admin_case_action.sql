@@ -24,8 +24,7 @@ CREATE TABLE admin_case_action (
     KEY idx_admin_case_action_case_status (case_id, status, created_at),
     KEY idx_admin_case_action_target_case (case_target_id, case_id),
     KEY idx_admin_case_action_operator (operator_account_id, created_at),
-    CONSTRAINT fk_admin_case_action_target_case FOREIGN KEY (case_target_id, case_id)
-        REFERENCES admin_case_target (id, case_id),
+
     CONSTRAINT ck_admin_case_action_status CHECK (status IN (0, 10, 20, 30, 40)),
     CONSTRAINT ck_admin_case_action_completed CHECK
         (status NOT IN (20, 30, 40) OR completed_at IS NOT NULL),

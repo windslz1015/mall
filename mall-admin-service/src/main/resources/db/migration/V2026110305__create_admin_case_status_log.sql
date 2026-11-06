@@ -13,8 +13,7 @@ CREATE TABLE admin_case_status_log (
     PRIMARY KEY (id),
     KEY idx_admin_case_status_log_case (case_id, occurred_at, id),
     KEY idx_admin_case_status_log_actor (actor_account_id, occurred_at),
-    CONSTRAINT fk_admin_case_status_log_case FOREIGN KEY (case_id)
-        REFERENCES admin_regulation_case (id),
+
     CONSTRAINT ck_admin_case_status_log_from CHECK
         (from_status IS NULL OR from_status IN (0, 10, 20, 30, 40, 50)),
     CONSTRAINT ck_admin_case_status_log_to CHECK

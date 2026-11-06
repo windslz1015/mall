@@ -29,8 +29,6 @@ CREATE TABLE admin_exception_investigation (
     KEY idx_admin_investigation_assignee (assigned_to_account_id, status, detected_at),
     KEY idx_admin_investigation_resource (source_domain, source_type, source_id),
     KEY idx_admin_investigation_case (related_case_id),
-    CONSTRAINT fk_admin_investigation_case FOREIGN KEY (related_case_id)
-        REFERENCES admin_regulation_case (id),
     CONSTRAINT ck_admin_investigation_source CHECK
         (source_domain IN ('IAM', 'MERCHANT', 'PRODUCT', 'ORDER', 'INVENTORY', 'PAYMENT', 'RELIABILITY')),
     CONSTRAINT ck_admin_investigation_priority CHECK (priority IN (1, 2, 3, 4)),

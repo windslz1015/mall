@@ -13,8 +13,6 @@ CREATE TABLE admin_investigation_log (
     PRIMARY KEY (id),
     KEY idx_admin_investigation_log_inv_time (investigation_id, occurred_at, id),
     KEY idx_admin_investigation_log_actor (actor_account_id, occurred_at),
-    CONSTRAINT fk_admin_investigation_log_inv FOREIGN KEY (investigation_id)
-        REFERENCES admin_exception_investigation (id),
     CONSTRAINT ck_admin_investigation_log_from CHECK
         (from_status IS NULL OR from_status IN (0, 10, 20, 30)),
     CONSTRAINT ck_admin_investigation_log_to CHECK

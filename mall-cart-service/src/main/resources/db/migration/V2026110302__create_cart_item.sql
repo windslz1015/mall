@@ -13,8 +13,6 @@ CREATE TABLE cart_item (
     PRIMARY KEY (id),
     UNIQUE KEY uk_cart_item_cart_sku (cart_id, sku_id),
     KEY idx_cart_item_cart_updated (cart_id, updated_at, id),
-    CONSTRAINT fk_cart_item_cart FOREIGN KEY (cart_id)
-        REFERENCES cart (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT ck_cart_item_positive_quantity CHECK (quantity > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   COMMENT='购物车项：一个购物车内一个SKU一条记录';
