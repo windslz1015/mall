@@ -27,7 +27,7 @@ public class OutboxDispatchService implements OutboxDispatchPort {
         this.executor = executor;
     }
 
-    /** 此方法只能在数据库事务提交后调用，线程池拒绝也不会丢事件（定时扫描兜底）。 */
+    /**此方法只能在数据库事务提交后调用，线程池拒绝也不会丢事件（定时扫描兜底）。 */
     @Override
     public void submit(Long outboxId) {
         try {
@@ -39,7 +39,7 @@ public class OutboxDispatchService implements OutboxDispatchPort {
         }
     }
 
-    /** 多实例通过claim的条件更新抢占消息；宕机由租约过期后重新扫描。*/
+    /**多实例通过claim的条件更新抢占消息；宕机由租约过期后重新扫描。*/
     public void dispatch(Long outboxId) {
         String claimToken = UUID.randomUUID().toString();
         try {

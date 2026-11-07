@@ -1,7 +1,7 @@
 # mall-reliability-service（DDD + Flyway 初始化版）
 
 > 本压缩包**仅用于项目初始化**。没有自动扫描订单、没有 RabbitMQ 消费代码、没有业务补偿、没有对账或状态恢复实现。
-
+mall-reliability-service 应该承担跨服务的异常恢复和补偿任务管理。
 ## 约定与目录
 
 - 父工程 `com.mall:mall:1.0.0-SNAPSHOT`，Java 17、Spring Boot 3.5.13、Spring Cloud 2025.0.3、Spring Cloud Alibaba 2025.0.0.0。
