@@ -17,6 +17,14 @@
 
 
     <dependencies>
+
+        <!-- XXL-JOB 分布式任务调度 -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
         <dependency>
             <groupId>com.mall</groupId>
             <artifactId>mall-common</artifactId>

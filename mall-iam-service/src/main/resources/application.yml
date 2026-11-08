@@ -58,6 +58,43 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 
+# XXL-JOB 执行器配置
+xxl:
+  job:
+    admin:
+      # XXL-JOB Admin 地址
+      addresses: ${XXL_JOB_ADMIN_ADDRESSES}
+      # 3.4.2 使用 admin.accessToken 配置
+      accessToken: ${XXL_JOB_ACCESS_TOKEN}
+      # 通信超时时间
+      timeout: 3
+
+    executor:
+      # 开启执行器
+      enabled: true
+
+      # 执行器 AppName
+      appname: mall-iam-service
+
+      # Docker 容器内 IAM 的注册地址
+      address: ${XXL_JOB_EXECUTOR_ADDRESS}
+
+      # 使用 address 注册时 IP 留空
+      ip: ""
+
+      # XXL-JOB 内嵌服务端口
+      port: ${XXL_JOB_EXECUTOR_PORT:9998}
+
+      # XXL-JOB 执行日志目录
+      logpath: ${XXL_JOB_EXECUTOR_LOGPATH:/data/applogs/xxl-job/jobhandler}
+
+      # 日志保留天数
+      logretentiondays: 30
+
+      # 排除扫描的包
+      excludedpackage: ""
+
+
 management:
   endpoints:
     web:

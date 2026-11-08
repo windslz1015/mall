@@ -10,7 +10,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 
 @Service
@@ -19,6 +21,13 @@ public class OutboxDispatchService implements OutboxDispatchPort {
     private final OutboxEventRepository repository;
     private final OutboxPublisher publisher;
     private final ThreadPoolTaskExecutor executor;
+    /**
+     * 当前 JVM 中已经提交或正在执行的 Outbox 事件 ID。
+     *
+     * 防止同一个事件在消息尚未开始处理时，
+     * 被连续扫描并重复放入线程池。
+     */
+    private final Set<Long> inFlight = ConcurrentHashMap.newKeySet();
 
     public OutboxDispatchService(OutboxEventRepository repository, OutboxPublisher publisher,
                                  @Qualifier("outboxExecutor") ThreadPoolTaskExecutor executor) {
@@ -30,12 +39,37 @@ public class OutboxDispatchService implements OutboxDispatchPort {
     /**此方法只能在数据库事务提交后调用，线程池拒绝也不会丢事件（定时扫描兜底）。 */
     @Override
     public void submit(Long outboxId) {
+        submitIfAbsent(outboxId);
+    }
+    /**
+     * 将 Outbox 事件提交到线程池。
+     *
+     * @return true：成功提交，或者已经在当前 JVM 排队/执行
+     *         false：线程池拒绝任务
+     */
+    public boolean submitIfAbsent(Long outboxId) {
+        // 1本地去重
+        if (!inFlight.add(outboxId)) {
+            log.debug("Outbox 事件已经提交或正在执行 outboxId={}", outboxId);
+            return true;
+        }
         try {
-            executor.execute(() -> dispatch(outboxId));
+            // 2提交线程池
+            executor.execute(() -> {
+                try {
+                    dispatch(outboxId);} // 3执行实际消息投递
+                finally {
+                    inFlight.remove(outboxId);// 4任务结束后释放本机去重标记
+                }});
+            return true;
         } catch (RejectedExecutionException e) {
-            log.warn("Outbox 线程池拒绝任务，等待定时任务补偿 outboxId={}", outboxId);
+            inFlight.remove(outboxId);//5线程池拒绝，释放标记，等待下一轮扫描
+            log.warn("Outbox 线程池拒绝任务，等待下轮定时扫描 outboxId={}", outboxId);
+            return false;
         } catch (RuntimeException e) {
-            log.error("Outbox 提交异步任务异常，等待定时任务补偿 outboxId={}", outboxId, e);
+            inFlight.remove(outboxId);
+            log.error("Outbox 异步任务提交异常 outboxId={}", outboxId, e);
+            return false;
         }
     }
 
