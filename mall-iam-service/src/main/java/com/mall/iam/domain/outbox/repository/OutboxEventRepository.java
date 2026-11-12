@@ -1,6 +1,6 @@
 package com.mall.iam.domain.outbox.repository;
 
-import com.mall.iam.domain.outbox.projection.OutboxDelivery;
+import com.mall.iam.application.outbox.query.OutboxDelivery;
 import com.mall.iam.domain.outbox.model.OutboxEvent;
 import java.time.LocalDateTime;
 import java.util.List;

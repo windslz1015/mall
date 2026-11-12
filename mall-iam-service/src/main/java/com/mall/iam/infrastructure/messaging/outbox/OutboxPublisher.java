@@ -1,7 +1,7 @@
 
 package com.mall.iam.infrastructure.messaging.outbox;
 
-import com.mall.iam.domain.outbox.projection.OutboxDelivery;
+import com.mall.iam.application.outbox.query.OutboxDelivery;
 import com.mall.iam.domain.outbox.model.OutboxEventType;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageDeliveryMode;

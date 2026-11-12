@@ -1,7 +1,7 @@
 package com.mall.iam.infrastructure.messaging.outbox;
 
 import com.mall.iam.application.shared.port.outbox.OutboxDispatchPort;
-import com.mall.iam.domain.outbox.projection.OutboxDelivery;
+import com.mall.iam.application.outbox.query.OutboxDelivery;
 import com.mall.iam.domain.outbox.repository.OutboxEventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

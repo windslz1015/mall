@@ -1,4 +1,4 @@
-package com.mall.iam.domain.outbox.projection;
+package com.mall.iam.application.outbox.query;
 
 /** 一条待投递消息的必要字段。本质是数据传递 */
 public record OutboxDelivery(
