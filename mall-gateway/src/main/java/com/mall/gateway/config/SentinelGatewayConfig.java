@@ -1,4 +1,3 @@
-
 package com.mall.gateway.config;
 
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
@@ -25,10 +24,13 @@ public class SentinelGatewayConfig {
                         .setCount(10)
                         .setIntervalSec(1);
 
-        // 2加载Gateway限流规则
-        GatewayRuleManager.loadRules(
-                Set.of(registerRule)
-        );
+        GatewayFlowRule loginRule = new GatewayFlowRule("iam-login-route")
+                .setCount(10).setIntervalSec(1);
+        GatewayFlowRule refreshRule = new GatewayFlowRule("iam-session-route")
+                .setCount(20).setIntervalSec(1);
+
+        // Load the complete route rule set once; loadRules replaces earlier rules.
+        GatewayRuleManager.loadRules(Set.of(registerRule, loginRule, refreshRule));
 
         // 3自定义Sentinel限流响应：HTTP 429
         GatewayCallbackManager.setBlockHandler(

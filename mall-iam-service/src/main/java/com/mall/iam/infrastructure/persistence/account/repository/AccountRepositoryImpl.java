@@ -2,6 +2,13 @@ package com.mall.iam.infrastructure.persistence.account.repository;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.mall.iam.application.account.port.persistence.LoginAccountStore;
+import com.mall.iam.application.account.query.LoginAccount;
+import com.mall.iam.domain.account.model.AccountType;
+import com.mall.iam.domain.account.model.AccountStatus;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import com.mall.iam.domain.account.model.Account;
 import com.mall.iam.domain.account.repository.AccountRepository;
 import com.mall.iam.infrastructure.persistence.account.mapper.AccountMapper;
@@ -11,7 +18,7 @@ import com.mall.iam.infrastructure.persistence.account.po.IamAccountProfilePO;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AccountRepositoryImpl implements AccountRepository {
+public class AccountRepositoryImpl implements AccountRepository, LoginAccountStore {
     private final AccountMapper accountMapper;
     private final AccountProfileMapper profileMapper;
 
@@ -63,6 +70,72 @@ public class AccountRepositoryImpl implements AccountRepository {
         profilePO.setRealName(account.getProfile().getRealName());
         if (profileMapper.insert(profilePO) != 1) {
             throw new IllegalStateException("保存账号资料失败");
+        }
+    }
+
+
+    @Override
+    public Optional<LoginAccount> findByUsernameForUpdate(String username) {
+        return findOne(new LambdaQueryWrapper<IamAccountPO>()
+                .eq(IamAccountPO::getUsername, username).last("FOR UPDATE"));
+    }
+
+    @Override
+    public Optional<LoginAccount> findByPhoneForUpdate(String phone) {
+        return findOne(new LambdaQueryWrapper<IamAccountPO>()
+                .eq(IamAccountPO::getPhone, phone).last("FOR UPDATE"));
+    }
+
+    @Override
+    public Optional<LoginAccount> findById(Long accountId) {
+        return Optional.ofNullable(accountMapper.selectById(accountId)).map(this::convertLoginAccount);
+    }
+
+    private Optional<LoginAccount> findOne(LambdaQueryWrapper<IamAccountPO> wrapper) {
+        return Optional.ofNullable(accountMapper.selectOne(wrapper)).map(this::convertLoginAccount);
+    }
+
+    private LoginAccount convertLoginAccount(IamAccountPO po) {
+        AccountType type = null;
+        for (AccountType candidate : AccountType.values()) {
+            if (po.getAccountType() != null && candidate.getCode() == po.getAccountType()) {
+                type = candidate;
+                break;
+            }
+        }
+        AccountStatus status = null;
+        for (AccountStatus candidate : AccountStatus.values()) {
+            if (po.getStatus() != null && candidate.getCode() == po.getStatus()) {
+                status = candidate;
+                break;
+            }
+        }
+        if (type == null || status == null || po.getFailedLoginCount() == null) {
+            throw new IllegalStateException("iam_account contains invalid type/status/login counter");
+        }
+        return new LoginAccount(po.getId(), po.getAccountNo(), po.getUsername(), type, status,
+                po.getPasswordHash(), po.getFailedLoginCount(), po.getLockedUntil());
+    }
+
+    @Override
+    public void updateFailureState(Long accountId, int failures, LocalDateTime lockedUntil) {
+        var update = new LambdaUpdateWrapper<IamAccountPO>()
+                .eq(IamAccountPO::getId, accountId)
+                .set(IamAccountPO::getFailedLoginCount, failures)
+                .set(IamAccountPO::getLockedUntil, lockedUntil);
+        if (accountMapper.update(null, update) != 1) {
+            throw new IllegalStateException("update login failures failed");
+        }
+    }
+
+    @Override
+    public void updateSuccessfulLogin(Long accountId, String clientIp, LocalDateTime nowUtc) {
+        var update = new LambdaUpdateWrapper<IamAccountPO>()
+                .eq(IamAccountPO::getId, accountId)
+                .set(IamAccountPO::getLastLoginAt, nowUtc)
+                .set(IamAccountPO::getLastLoginIp, clientIp);
+        if (accountMapper.update(null, update) != 1) {
+            throw new IllegalStateException("update last login failed");
         }
     }
 

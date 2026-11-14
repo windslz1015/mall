@@ -3,6 +3,7 @@ package com.mall.iam.infrastructure.persistence.account.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.time.LocalDateTime;
 
 
 @TableName("iam_account")
@@ -24,6 +25,20 @@ public class IamAccountPO {
     private String passwordHash;
 
     private Integer status;
+
+    private Integer failedLoginCount;
+    private LocalDateTime lockedUntil;
+    private LocalDateTime lastLoginAt;
+    private String lastLoginIp;
+
+    public Integer getFailedLoginCount() { return failedLoginCount; }
+    public void setFailedLoginCount(Integer failedLoginCount) { this.failedLoginCount = failedLoginCount; }
+    public LocalDateTime getLockedUntil() { return lockedUntil; }
+    public void setLockedUntil(LocalDateTime lockedUntil) { this.lockedUntil = lockedUntil; }
+    public LocalDateTime getLastLoginAt() { return lastLoginAt; }
+    public void setLastLoginAt(LocalDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
+    public String getLastLoginIp() { return lastLoginIp; }
+    public void setLastLoginIp(String lastLoginIp) { this.lastLoginIp = lastLoginIp; }
 
     public Long getId() {
         return id;

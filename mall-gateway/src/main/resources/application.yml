@@ -1,5 +1,12 @@
 # 自定义业务配置
 gateway:
+  jwt:
+    hmac-secret-base64: ${IAM_JWT_HS256_KEY_BASE64}
+    issuer: mall-iam
+    audience: mall-gateway
+  login:
+    risk:
+      max-ip-requests-per-minute: 30
   security:
     trusted-nginx-ip: ${TRUSTED_NGINX_IP:192.168.195.128}
 
@@ -20,6 +27,25 @@ spring:
       server:
         webflux:
           routes:
+            # Ordinary-user login: no Method predicate so validation filter can return HTTP 405.
+            - id: iam-login-route
+              order: -20
+              uri: lb://iam-service
+              predicates:
+                - Path=/api/iam/auth/login
+              filters:
+                - name: LoginValidation
+                - name: LoginRisk
+                - RewritePath=/api/iam/(?<segment>.*), /api/$\{segment}
+            # Refresh and logout are POST-only and use cookie-scoped refresh credentials.
+            - id: iam-session-route
+              order: -15
+              uri: lb://iam-service
+              predicates:
+                - Path=/api/iam/auth/refresh, /api/iam/auth/logout
+                - Method=POST
+              filters:
+                - RewritePath=/api/iam/(?<segment>.*), /api/$\{segment}
             # 注册接口专用路由
             - id: iam-register-route
               order: -10
@@ -30,7 +56,7 @@ spring:
               filters:
                 - name: RegisterValidation
                 - name: RegisterRisk
-                - RewritePath=/api/iam/(?<segment>.*), /api/v1/$\{segment}
+                - RewritePath=/api/iam/(?<segment>.*), /api/$\{segment}
             # IAM 通用路由
             - id: iam-service-route
               order: 0
@@ -38,7 +64,33 @@ spring:
               predicates:
                 - Path=/api/iam/**
               filters:
-                - RewritePath=/api/iam/(?<segment>.*), /api/v1/$\{segment}
+                - RewritePath=/api/iam/(?<segment>.*), /api/$\{segment}
+
+            # Ordinary-user business routes; business services MUST enforce their own permissions.
+            - id: product-service-route
+              uri: lb://product-service
+              predicates:
+                - Path=/api/product/**
+              filters:
+                - RewritePath=/api/product/(?<segment>.*), /api/$\{segment}
+            - id: cart-service-route
+              uri: lb://cart-service
+              predicates:
+                - Path=/api/cart/**
+              filters:
+                - RewritePath=/api/cart/(?<segment>.*), /api/$\{segment}
+            - id: order-service-route
+              uri: lb://order-service
+              predicates:
+                - Path=/api/order/**
+              filters:
+                - RewritePath=/api/order/(?<segment>.*), /api/$\{segment}
+            - id: merchant-service-route
+              uri: lb://merchant-service
+              predicates:
+                - Path=/api/merchant/**
+              filters:
+                - RewritePath=/api/merchant/(?<segment>.*), /api/$\{segment}
 
 
   data:

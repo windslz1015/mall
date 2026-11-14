@@ -38,7 +38,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Result<Void>> business(BusinessException e) {
         HttpStatus status = switch (e.getCode()) {
             case 10001, 10002, 10003, 10009 -> HttpStatus.CONFLICT;
-            case 10008, 10011, 10012 -> HttpStatus.TOO_MANY_REQUESTS;
+            case 10008, 10011, 10012, 10017 -> HttpStatus.TOO_MANY_REQUESTS;
+            case 10014, 10018 -> HttpStatus.UNAUTHORIZED;
+            case 10015, 10016 -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.BAD_REQUEST;
         };
         return ResponseEntity.status(status).body(Result.failure(e.getCode(), e.getMessage()));

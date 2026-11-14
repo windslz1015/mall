@@ -15,7 +15,12 @@ public enum AccountErrorCode implements ErrorCode {
     PASSWORD_BYTES_EXCEEDED(10010, "密码UTF-8编码后不能超过72字节"),
     VERIFICATION_CODE_SEND_TOO_FREQUENT(10011, "验证码发送太频繁，请稍后重试"),
     VERIFICATION_CODE_SEND_DAILY_LIMIT(10012, "验证码发送次数已达上限，请稍后再试"),
-    PHONE_FORMAT_INVALID(10013, "手机号格式不正确");
+    PHONE_FORMAT_INVALID(10013, "手机号格式不正确"),
+    LOGIN_BAD_CREDENTIALS(10014, "账号或密码错误"),
+    LOGIN_ACCOUNT_UNAVAILABLE(10015, "账号状态异常，无法登录"),
+    LOGIN_ACCOUNT_LOCKED(10016, "账号已锁定，请稍后重试"),
+    LOGIN_TOO_FREQUENT(10017, "登录尝试过于频繁，请稍后重试"),
+    LOGIN_REFRESH_INVALID(10018, "登录已失效，请重新登录");
 
 
     private final int code;

@@ -42,6 +42,19 @@ spring:
 
 
 iam:
+  jwt:
+    # Both IAM and Gateway must use the SAME high-entropy secret. Never commit the value.
+    hmac-secret-base64: ${IAM_JWT_HS256_KEY_BASE64}
+    issuer: mall-iam
+    audience: mall-gateway
+    access-ttl-seconds: 900
+    refresh-ttl-seconds: 604800
+  login:
+    max-failed-attempts: 5
+    lock-duration-minutes: 15
+    risk:
+      max-requests-per-minute: 20
+      max-bad-credentials-per-window: 10
   registration:
     code-lease-seconds: 120
     code-expire-seconds: 300
