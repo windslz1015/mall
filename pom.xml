@@ -42,7 +42,7 @@
         <module>mall-admin-service</module>
         <!-- 业务保障服务 -->
         <module>mall-reliability-service</module>
-        <!-- 站内通知服务 -->
+        <!-- 通知服务 -->
         <module>mall-notification-service</module>
     </modules>
 
