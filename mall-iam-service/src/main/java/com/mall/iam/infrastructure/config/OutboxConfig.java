@@ -13,12 +13,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class OutboxConfig {
     @Bean
     public TopicExchange iamEventsExchange() {return new TopicExchange(IamRabbitRouting.EXCHANGE, true, false);}
-    @Bean public Queue accountRegisteredQueue() {
-        return new Queue("iam.account.registered", true);
-    }
-    @Bean public Binding accountRegisteredBinding(Queue accountRegisteredQueue, TopicExchange iamEventsExchange) {
-        return BindingBuilder.bind(accountRegisteredQueue).to(iamEventsExchange).with(IamRabbitRouting.ACCOUNT_REGISTERED);
-    }
 
     @Bean("outboxExecutor") public ThreadPoolTaskExecutor outboxExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
