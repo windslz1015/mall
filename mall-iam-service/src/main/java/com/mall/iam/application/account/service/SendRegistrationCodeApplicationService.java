@@ -44,8 +44,7 @@ public class SendRegistrationCodeApplicationService {
 
     public void send(String rawPhone) {
 
-        if (rawPhone == null ||
-                !PHONE_PATTERN.matcher(rawPhone).matches()) {
+        if (rawPhone == null || !PHONE_PATTERN.matcher(rawPhone).matches()) {
             throw new BusinessException(AccountErrorCode.PHONE_FORMAT_INVALID);}
         if (accountRepository.existsByPhone(rawPhone)) {
             throw new BusinessException(AccountErrorCode.PHONE_ALREADY_EXISTS);}
